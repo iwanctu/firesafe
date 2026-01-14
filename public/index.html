@@ -1160,6 +1160,12 @@
             
             if(window.initFirebase) window.initFirebase();
         }
+
+        // Stub for Firebase (no longer used - using REST API instead)
+        window.initFirebase = function() {
+            const el = document.getElementById('connection-status-badge');
+            if(el) el.innerHTML = '<span class="text-blue-500 font-bold">API CONNECTED</span>';
+        };
     </script>
     <!-- Socket.IO for Real-time Updates -->
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
@@ -1183,59 +1189,6 @@
         socket.on('categoryDeleted', (data) => { if(typeof window.categories !== 'undefined') { window.categories = window.categories.filter(c => c.id !== data.id); window.saveData(); window.updateAdminCategories(); } });
         
         socket.on('layoutConfigUpdated', (config) => { if(typeof window.layoutConfig !== 'undefined') { window.layoutConfig = config; window.saveData(); window.updateAdminHomepage(); window.renderAll(); } });
-    </script>
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        let firebaseConfig; let appId;
-        if (typeof __firebase_config !== 'undefined') { firebaseConfig = JSON.parse(__firebase_config); appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'; } 
-        else { firebaseConfig = { apiKey: "YOUR_API_KEY", authDomain: "YOUR_PROJECT_ID.firebaseapp.com", projectId: "YOUR_PROJECT_ID", storageBucket: "YOUR_PROJECT_ID.firebasestorage.app", messagingSenderId: "YOUR_SENDER_ID", appId: "YOUR_APP_ID" }; appId = 'firesafe-live-v1'; }
-
-        // EXPORT SYNC FUNCTION FOR MAIN SCRIPT
-        window.syncProductToCloud = async (docId, discountVal) => {
-             if(!docId || !navigator.onLine) return;
-             try {
-                const app = initializeApp(firebaseConfig); const db = getFirestore(app);
-                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', docId), { discount: discountVal });
-             } catch(e) { console.error("Cloud sync silent fail", e); }
-        };
-
-        window.initFirebase = async () => {
-             const el = document.getElementById('connection-status-badge');
-             if (!navigator.onLine || firebaseConfig.apiKey === "YOUR_API_KEY") { 
-                el.innerHTML = '<span class="text-yellow-500 font-bold">OFFLINE / DEMO</span>'; return; 
-             }
-             try {
-                const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token); else await signInAnonymously(auth);
-                
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        el.innerHTML = '<span class="text-green-500 font-bold">ONLINE SYNC</span>';
-                        onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), (snapshot) => {
-                            if (!snapshot.empty) {
-                                window.products = snapshot.docs.map(doc => ({ ...doc.data(), docId: doc.id })).sort((a,b) => a.id - b.id);
-                                localStorage.setItem(CACHE.PRODUCTS, JSON.stringify(window.products));
-                                if(window.renderAll) window.renderAll(); 
-                                if(window.updateAdminPromo) window.updateAdminPromo();
-                                if(window.updateAdminInventory) window.updateAdminInventory();
-                                if(window.updateAdminClients) window.updateAdminClients();
-                            }
-                        });
-                        onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'clients'), (snapshot) => {
-                            if (!snapshot.empty) {
-                                window.clients = snapshot.docs.map(doc => ({ ...doc.data(), docId: doc.id }));
-                                localStorage.setItem(CACHE.CLIENTS, JSON.stringify(window.clients));
-                                if(window.updateAdminClients) window.updateAdminClients();
-                            }
-                        });
-                    }
-                });
-             } catch(e) { console.error(e); }
-        };
-        // Re-call init if module loads late
-        if (document.readyState === 'complete') window.initFirebase();
     </script>
 </body>
 </html>
