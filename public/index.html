@@ -524,10 +524,24 @@
             }
         };
 
-        window.saveLayoutConfig = function() {
-            window.saveData(); // Save to local storage
-            showToast("Layout Configuration Saved");
-            window.switchPage('home'); // Refresh homepage
+        window.saveLayoutConfig = async function() {
+            try {
+                const response = await fetch(`${window.API_BASE}/api/layout-config`, { 
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(layoutConfig)
+                });
+                if(response.ok) {
+                    window.saveData(); // Save to local storage too
+                    showToast("Layout Configuration Saved");
+                    window.switchPage('home'); // Refresh homepage
+                } else {
+                    showToast("Save Error");
+                }
+            } catch(err) {
+                console.error(err);
+                showToast("Network Error");
+            }
         };
         
         window.addNewModule = function() {
@@ -906,13 +920,158 @@
         };
 
         // --- BIND ADMIN BUTTONS ---
-        window.handleAdminProductSubmit = async function(e) { e.preventDefault(); const id = document.getElementById('admin-edit-id').value; const urlInput = document.getElementById('admin-p-img'); const fileInput = document.getElementById('admin-p-file'); let finalImage = ""; if (fileInput.files && fileInput.files.length > 0) { try { finalImage = await window.readFileAsBase64(fileInput.files[0]); } catch (err) { showToast("Image Upload Error"); return; } } else if (urlInput.value.trim() !== "") { finalImage = urlInput.value.trim(); } else if (id) { const existing = products.find(p => p.id == id); finalImage = existing ? existing.image : ""; } if (!finalImage) finalImage = "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=800"; const specsRaw = document.getElementById('admin-p-specs').value; const specsArray = specsRaw.split('\n').map(s => s.trim()).filter(s => s.length > 0); const data = { name: document.getElementById('admin-p-name').value, price: parseFloat(document.getElementById('admin-p-price').value), stock: parseInt(document.getElementById('admin-p-stock').value), cat: document.getElementById('admin-p-cat').value, rating: parseInt(document.getElementById('admin-p-rating').value) || 5, image: finalImage, specs: specsArray.length > 0 ? specsArray : ["Standard Verified"], featured: false, discount: 0 }; if (id) { const idx = products.findIndex(p => p.id == id); products[idx] = { ...products[idx], ...data, featured: products[idx].featured, discount: products[idx].discount }; } else { products.unshift({ id: Date.now(), ...data }); } window.saveData(); window.resetAdminForm(); window.updateAdminInventory(); window.renderAll(); showToast("Asset & Visuals Updated"); };
+        window.handleAdminProductSubmit = async function(e) { 
+            e.preventDefault(); 
+            const id = document.getElementById('admin-edit-id').value; 
+            const urlInput = document.getElementById('admin-p-img'); 
+            const fileInput = document.getElementById('admin-p-file'); 
+            let finalImage = ""; 
+            
+            if (fileInput.files && fileInput.files.length > 0) { 
+                try { 
+                    const formData = new FormData();
+                    formData.append('image', fileInput.files[0]);
+                    formData.append('name', document.getElementById('admin-p-name').value);
+                    formData.append('price', document.getElementById('admin-p-price').value);
+                    formData.append('stock', document.getElementById('admin-p-stock').value);
+                    formData.append('cat', document.getElementById('admin-p-cat').value);
+                    formData.append('rating', document.getElementById('admin-p-rating').value);
+                    
+                    const specsRaw = document.getElementById('admin-p-specs').value;
+                    const specsArray = specsRaw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+                    formData.append('specs', JSON.stringify(specsArray.length > 0 ? specsArray : ["Standard Verified"]));
+                    
+                    const response = await fetch(`${window.API_BASE}/api/products${id ? '/' + id : ''}`, { 
+                        method: id ? 'PUT' : 'POST', 
+                        body: formData 
+                    });
+                    if(response.ok) { 
+                        const newProduct = await response.json(); 
+                        showToast("Asset & Visuals Updated"); 
+                    } else { 
+                        showToast("Upload Error"); 
+                        return; 
+                    }
+                } catch (err) { 
+                    showToast("File Upload Error"); 
+                    console.error(err);
+                    return; 
+                } 
+            } else if (urlInput.value.trim() !== "") { 
+                finalImage = urlInput.value.trim(); 
+                const data = { 
+                    name: document.getElementById('admin-p-name').value, 
+                    price: parseFloat(document.getElementById('admin-p-price').value), 
+                    stock: parseInt(document.getElementById('admin-p-stock').value), 
+                    cat: document.getElementById('admin-p-cat').value, 
+                    rating: parseInt(document.getElementById('admin-p-rating').value) || 5, 
+                    image: finalImage, 
+                    specs: document.getElementById('admin-p-specs').value.split('\n').map(s => s.trim()).filter(s => s.length > 0), 
+                    featured: false, 
+                    discount: 0 
+                };
+                try {
+                    const response = await fetch(`${window.API_BASE}/api/products${id ? '/' + id : ''}`, { 
+                        method: id ? 'PUT' : 'POST', 
+                        headers: { 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify(data) 
+                    });
+                    if(response.ok) { 
+                        showToast("Asset & Visuals Updated"); 
+                    } else { 
+                        showToast("API Error"); 
+                    }
+                } catch(err) { 
+                    showToast("Network Error"); 
+                    console.error(err);
+                }
+            } else if (id) { 
+                const existing = products.find(p => p.id == id); 
+                finalImage = existing ? existing.image : ""; 
+            }
+            if (!finalImage) finalImage = "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=800";
+            
+            window.resetAdminForm(); 
+            window.updateAdminInventory(); 
+            window.renderAll(); 
+        };
         window.editAdminProduct = function(id) { const p = products.find(x => x.id == id); document.getElementById('admin-edit-id').value = p.id; document.getElementById('admin-p-name').value = p.name; document.getElementById('admin-p-price').value = p.price; document.getElementById('admin-p-stock').value = p.stock; document.getElementById('admin-p-cat').value = p.cat; document.getElementById('admin-p-rating').value = p.rating || 5; document.getElementById('admin-p-specs').value = (p.specs || []).join('\n'); document.getElementById('admin-p-img').value = ""; document.getElementById('admin-p-file').value = ""; document.getElementById('file-upload-label').textContent = "Change Image (Optional)"; document.getElementById('file-upload-label').classList.remove('text-green-400'); if (!p.image.startsWith('data:')) { document.getElementById('admin-p-img').value = p.image; } document.getElementById('admin-form-title').innerText = "Edit Asset Protocol"; document.getElementById('admin-cancel-btn').classList.remove('hidden'); };
-        window.deleteAdminProduct = function(id) { products = products.filter(p => p.id !== id); window.saveData(); window.updateAdminInventory(); window.renderAll(); showToast("Asset Deleted"); };
+        window.deleteAdminProduct = async function(id) { 
+            try {
+                const response = await fetch(`${window.API_BASE}/api/products/${id}`, { method: 'DELETE' });
+                if(response.ok) { 
+                    products = products.filter(p => p.id !== id); 
+                    window.saveData(); 
+                    window.updateAdminInventory(); 
+                    window.renderAll(); 
+                    showToast("Asset Deleted"); 
+                } else {
+                    showToast("Delete Error");
+                }
+            } catch(err) {
+                console.error(err);
+                showToast("Network Error");
+            }
+        };
         window.resetAdminForm = function() { document.getElementById('admin-product-form').reset(); document.getElementById('admin-edit-id').value = ""; document.getElementById('file-upload-label').textContent = "Option B: Upload From Device"; document.getElementById('file-upload-label').classList.remove('text-green-400'); document.getElementById('admin-form-title').innerText = "Provision Asset"; document.getElementById('admin-cancel-btn').classList.add('hidden'); };
-        window.handleAdminCategorySubmit = function(e) { e.preventDefault(); const id = document.getElementById('admin-edit-cat-id').value, name = document.getElementById('admin-c-name').value; if (id) { const idx = categories.findIndex(c => c.id == id), old = categories[idx].name; categories[idx].name = name; products.forEach(p => { if(p.cat === old) p.cat = name; }); } else { categories.push({ id: Date.now(), name, icon: 'layers', color: 'bg-orange-500/10' }); } window.saveData(); window.resetAdminCatForm(); window.updateAdminCategories(); window.updateAdminInventory(); window.renderAll(); showToast("Module Protocol Updated"); };
+        window.handleAdminCategorySubmit = async function(e) { 
+            e.preventDefault(); 
+            const id = document.getElementById('admin-edit-cat-id').value;
+            const name = document.getElementById('admin-c-name').value;
+            const data = { name };
+            try {
+                const response = await fetch(`${window.API_BASE}/api/categories${id ? '/' + id : ''}`, { 
+                    method: id ? 'PUT' : 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if(response.ok) {
+                    const result = await response.json();
+                    if (id) { 
+                        const idx = categories.findIndex(c => c.id == id);
+                        const old = categories[idx].name;
+                        categories[idx].name = name; 
+                        products.forEach(p => { if(p.cat === old) p.cat = name; }); 
+                    } else { 
+                        categories.push(result);
+                    } 
+                    window.saveData(); 
+                    window.resetAdminCatForm(); 
+                    window.updateAdminCategories(); 
+                    window.updateAdminInventory(); 
+                    window.renderAll(); 
+                    showToast("Module Protocol Updated"); 
+                } else {
+                    showToast("Category Error");
+                }
+            } catch(err) {
+                console.error(err);
+                showToast("Network Error");
+            }
+        };
         window.editAdminCategory = function(id) { const c = categories.find(x => x.id == id); document.getElementById('admin-edit-cat-id').value = c.id; document.getElementById('admin-c-name').value = c.name; document.getElementById('admin-cat-form-title').innerText = "Edit Module Node"; document.getElementById('admin-cat-cancel-btn').classList.remove('hidden'); };
-        window.deleteAdminCategory = function(id) { const c = categories.find(x => x.id === id); if(c) { categories = categories.filter(x => x.id !== id); products.forEach(p => { if(p.cat === c.name) p.cat = "Uncategorized"; }); window.saveData(); window.updateAdminCategories(); window.updateAdminInventory(); window.renderAll(); showToast("Module Deleted"); } };
+        window.deleteAdminCategory = async function(id) { 
+            const c = categories.find(x => x.id === id);
+            if(c) { 
+                try {
+                    const response = await fetch(`${window.API_BASE}/api/categories/${id}`, { method: 'DELETE' });
+                    if(response.ok) {
+                        categories = categories.filter(x => x.id !== id); 
+                        products.forEach(p => { if(p.cat === c.name) p.cat = "Uncategorized"; }); 
+                        window.saveData(); 
+                        window.updateAdminCategories(); 
+                        window.updateAdminInventory(); 
+                        window.renderAll(); 
+                        showToast("Module Deleted"); 
+                    } else {
+                        showToast("Delete Error");
+                    }
+                } catch(err) {
+                    console.error(err);
+                    showToast("Network Error");
+                }
+            }
+        };
         window.resetAdminCatForm = function() { document.getElementById('admin-category-form').reset(); document.getElementById('admin-edit-cat-id').value = ""; document.getElementById('admin-cat-form-title').innerText = "Provision Module"; document.getElementById('admin-cat-cancel-btn').classList.add('hidden'); };
         
         window.toggleAdStatus = function(id) { const p = products.find(x => x.id === id); if(p) { p.featured = !p.featured; window.saveData(); window.updateAdminHomepage(); window.renderAdvertised(); showToast("Ad Layout Updated"); } };
@@ -932,16 +1091,67 @@
             });
         };
 
-        // --- INIT ---
-        window.onload = function() {
-            const p = localStorage.getItem(CACHE.PRODUCTS); if(p && p!=='[]') products = JSON.parse(p); else products = [...defaultProducts];
-            const c = localStorage.getItem(CACHE.CATEGORIES); if(c) categories = JSON.parse(c); else categories = [...defaultCategories];
-            const l = localStorage.getItem(CACHE.LAYOUT); if(l) layoutConfig = JSON.parse(l); else layoutConfig = [...defaultLayoutConfig];
+        // --- API CALL HELPER ---
+        // Use current domain in production, localhost for development
+        window.API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000' 
+            : `https://${window.location.hostname}`;
+        window.apiCall = async function(endpoint, options = {}) {
+            const url = `${window.API_BASE}${endpoint}`;
+            const config = {
+                headers: { 'Content-Type': 'application/json', ...options.headers },
+                ...options
+            };
+            try {
+                const res = await fetch(url, config);
+                if(!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                return await res.json();
+            } catch(e) { console.error(`API Error [${endpoint}]:`, e); throw e; }
+        };
+
+        // --- DATA LOADER (FROM API + FALLBACK TO LOCALSTORAGE) ---
+        window.loadData = async function() {
+            try {
+                // Try loading from backend API
+                const [p, c, l] = await Promise.all([
+                    window.apiCall('/api/products'),
+                    window.apiCall('/api/categories'),
+                    window.apiCall('/api/layout-config')
+                ]);
+                products = p || [...defaultProducts];
+                categories = c || [...defaultCategories];
+                layoutConfig = l || [...defaultLayoutConfig];
+                console.log('✓ Data loaded from cloud backend');
+            } catch(e) {
+                console.warn('⚠ Cloud sync failed, using local cache:', e.message);
+                // Fallback to localStorage
+                const p = localStorage.getItem(CACHE.PRODUCTS); if(p && p!=='[]') products = JSON.parse(p); else products = [...defaultProducts];
+                const c = localStorage.getItem(CACHE.CATEGORIES); if(c) categories = JSON.parse(c); else categories = [...defaultCategories];
+                const l = localStorage.getItem(CACHE.LAYOUT); if(l) layoutConfig = JSON.parse(l); else layoutConfig = [...defaultLayoutConfig];
+            }
+            // Load other local data from storage
             const o = localStorage.getItem(CACHE.ORDERS); if(o) orders = JSON.parse(o);
             const cl = localStorage.getItem(CACHE.CLIENTS); if(cl) clients = JSON.parse(cl);
             const s = localStorage.getItem('firesafe_page_contents'); if(s) { const saved = JSON.parse(s); pageContents = { ...pageContents, ...saved }; }
             const sl = localStorage.getItem('firesafe_social_links'); if(sl) socialLinks = JSON.parse(sl);
             const tm = localStorage.getItem('firesafe_team_members'); if(tm) { teamMembers = JSON.parse(tm); }
+        };
+
+        // --- SAVE DATA (TO API + LOCALSTORAGE) ---
+        window.saveData = function() {
+            localStorage.setItem(CACHE.PRODUCTS, JSON.stringify(products));
+            localStorage.setItem(CACHE.CATEGORIES, JSON.stringify(categories));
+            localStorage.setItem(CACHE.LAYOUT, JSON.stringify(layoutConfig));
+            localStorage.setItem(CACHE.ORDERS, JSON.stringify(orders));
+            localStorage.setItem(CACHE.CLIENTS, JSON.stringify(clients));
+            localStorage.setItem('firesafe_page_contents', JSON.stringify(pageContents));
+            localStorage.setItem('firesafe_social_links', JSON.stringify(socialLinks));
+            localStorage.setItem('firesafe_team_members', JSON.stringify(teamMembers));
+        };
+
+        // --- INIT ---
+        window.onload = async function() {
+            await window.loadData();
             
             const container = document.getElementById('page-container');
             if (!container.innerHTML.trim()) { window.switchPage('home'); } else { window.renderAll(); }
@@ -951,8 +1161,29 @@
             if(window.initFirebase) window.initFirebase();
         }
     </script>
-    <!-- Firebase Script (Simplified) -->
-    <script type="module">
+    <!-- Socket.IO for Real-time Updates -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        // --- SOCKET.IO REAL-TIME SYNC ---
+        // Auto-detect API server (localhost in dev, current domain in prod)
+        const SOCKET_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000' 
+            : `https://${window.location.hostname}`;
+        const socket = io(SOCKET_URL, { reconnection: true, reconnectionDelay: 1000, reconnectionDelayMax: 5000 });
+        
+        socket.on('connect', () => { console.log('✓ Connected to WebSocket'); if(typeof showToast !== 'undefined') showToast('Live sync enabled'); });
+        socket.on('disconnect', () => { console.log('✗ Disconnected from WebSocket'); if(typeof showToast !== 'undefined') showToast('Offline mode', 'warning'); });
+        
+        socket.on('productCreated', (product) => { if(typeof window.products !== 'undefined') { window.products.unshift(product); window.saveData(); window.renderAll(); window.updateAdminInventory(); } });
+        socket.on('productUpdated', (product) => { if(typeof window.products !== 'undefined') { const idx = window.products.findIndex(p => p.id === product.id); if(idx >= 0) { window.products[idx] = product; window.saveData(); window.renderAll(); window.updateAdminInventory(); } } });
+        socket.on('productDeleted', (data) => { if(typeof window.products !== 'undefined') { window.products = window.products.filter(p => p.id !== data.id); window.saveData(); window.renderAll(); window.updateAdminInventory(); } });
+        
+        socket.on('categoryCreated', (category) => { if(typeof window.categories !== 'undefined') { window.categories.push(category); window.saveData(); window.updateAdminCategories(); window.updateAdminInventory(); } });
+        socket.on('categoryUpdated', (data) => { if(typeof window.categories !== 'undefined') { const idx = window.categories.findIndex(c => c.id === data.id); if(idx >= 0) { window.categories[idx] = { ...window.categories[idx], ...data }; window.saveData(); window.updateAdminCategories(); } } });
+        socket.on('categoryDeleted', (data) => { if(typeof window.categories !== 'undefined') { window.categories = window.categories.filter(c => c.id !== data.id); window.saveData(); window.updateAdminCategories(); } });
+        
+        socket.on('layoutConfigUpdated', (config) => { if(typeof window.layoutConfig !== 'undefined') { window.layoutConfig = config; window.saveData(); window.updateAdminHomepage(); window.renderAll(); } });
+    </script>
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
