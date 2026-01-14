@@ -1095,7 +1095,10 @@
         // Use current domain in production, localhost for development
         window.API_BASE = window.location.hostname === 'localhost' 
             ? 'http://localhost:3000' 
-            : `https://${window.location.hostname}`;
+            : 'https://firesafe-oxdd.onrender.com';  // Always use Render backend for cloud deployment
+        
+        console.log('🌐 API Base URL:', window.API_BASE);
+        
         window.apiCall = async function(endpoint, options = {}) {
             const url = `${window.API_BASE}${endpoint}`;
             const config = {
@@ -1103,15 +1106,26 @@
                 ...options
             };
             try {
+                console.log(`📤 API Request: ${config.method || 'GET'} ${url}`);
                 const res = await fetch(url, config);
-                if(!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-                return await res.json();
-            } catch(e) { console.error(`API Error [${endpoint}]:`, e); throw e; }
+                if(!res.ok) {
+                    const errorText = await res.text();
+                    console.error(`❌ API Error: HTTP ${res.status} - ${errorText}`);
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+                const data = await res.json();
+                console.log(`✅ API Response: ${endpoint}`, data);
+                return data;
+            } catch(e) { 
+                console.error(`❌ API Error [${endpoint}]:`, e); 
+                throw e; 
+            }
         };
 
         // --- DATA LOADER (FROM API + FALLBACK TO LOCALSTORAGE) ---
         window.loadData = async function() {
             try {
+                console.log('📡 Loading data from API...');
                 // Try loading from backend API
                 const [p, c, l] = await Promise.all([
                     window.apiCall('/api/products'),
@@ -1121,9 +1135,10 @@
                 products = p || [...defaultProducts];
                 categories = c || [...defaultCategories];
                 layoutConfig = l || [...defaultLayoutConfig];
-                console.log('✓ Data loaded from cloud backend');
+                console.log('✅ Data loaded from cloud backend');
+                console.log(`   Products: ${products.length}, Categories: ${categories.length}`);
             } catch(e) {
-                console.warn('⚠ Cloud sync failed, using local cache:', e.message);
+                console.warn('⚠️ Cloud sync failed, using local cache:', e.message);
                 // Fallback to localStorage
                 const p = localStorage.getItem(CACHE.PRODUCTS); if(p && p!=='[]') products = JSON.parse(p); else products = [...defaultProducts];
                 const c = localStorage.getItem(CACHE.CATEGORIES); if(c) categories = JSON.parse(c); else categories = [...defaultCategories];
