@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FireSafe | Professional Safety Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        :root { --safety-red: #ef4444; --dark-bg: #05080f; --dark-surface: #0d121f; --dark-border: rgba(255, 255, 255, 0.08); }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark-bg); color: #f1f5f9; scroll-behavior: smooth; }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0a0f18; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .product-card { background-color: var(--dark-surface); border: 1px solid var(--dark-border); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-card:hover { transform: translateY(-8px); border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5), 0 18px 36px -18px rgba(239, 68, 68, 0.3); }
+        .promo-card-highlight { border: 2px solid rgba(239, 68, 68, 0.5); box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); animation: pulse-border 2s infinite; }
+        @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        .sticky-header { position: sticky; top: 0; z-index: 50; background: rgba(5, 8, 15, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--dark-border); }
+        #cart-panel, #ai-consultant-panel, #payment-modal, #manage-modal, #auth-modal, #product-detail-modal, #delivery-modal { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; }
+        .cart-hidden, .ai-hidden { transform: translateX(100%); }
+        .beacon-red { animation: strobe-red 0.6s infinite; }
+        .beacon-blue { animation: strobe-blue 0.6s infinite; animation-delay: 0.3s; }
+        @keyframes strobe-red { 0%, 20%, 40% { background-color: #ff0000; box-shadow: 0 0 70px 20px rgba(255, 0, 0, 0.9); } 10%, 30%, 50%, 100% { background-color: #330000; box-shadow: none; } }
+        @keyframes strobe-blue { 0%, 20%, 40% { background-color: #0077ff; box-shadow: 0 0 70px 20px rgba(0, 119, 255, 0.9); } 10%, 30%, 50%, 100% { background-color: #001a33; box-shadow: none; } }
+        .nav-link { 
+            position: relative;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #94a3b8;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 4px solid rgba(0, 0, 0, 0.5); /* 3D Bottom */
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        .nav-link:hover {
+            transform: translateY(-2px);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(180deg, rgba(51, 65, 85, 0.6) 0%, rgba(30, 41, 59, 0.9) 100%);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.5);
+            border-bottom-color: rgba(0, 0, 0, 0.7);
+        }
+        .nav-link:active {
+            transform: translateY(2px);
+            border-bottom-width: 1px;
+            margin-top: 3px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .nav-link.active {
+            background: linear-gradient(180deg, #dc2626 0%, #7f1d1d 100%);
+            color: #ffffff;
+            border-color: #ef4444;
+            border-bottom-color: #450a0a;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+            transform: translateY(0);
+        }
+        .nav-link.active:hover {
+            background: linear-gradient(180deg, #ef4444 0%, #991b1b 100%);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.6), inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+
+        .hero-fire-bg { background-image: linear-gradient(to right, rgba(5, 8, 15, 0.95) 30%, rgba(5, 8, 15, 0.2) 100%), url('https://images.unsplash.com/photo-1540331547168-8b6472b74658?auto=format&fit=crop&q=80&w=1200'); background-size: cover; background-position: center; }
+        .slogan-gradient { @apply bg-gradient-to-r from-white via-white to-red-500 bg-clip-text text-transparent; }
+        .scan-line { height: 2px; background: linear-gradient(to right, transparent, var(--safety-red), transparent); width: 100%; position: absolute; top: 0; animation: scanning 4s infinite linear; }
+        @keyframes scanning { 0% { top: 0; opacity: 0; } 50% { opacity: 0.8; } 100% { top: 100%; opacity: 0; } }
+        .payment-card-3d { @apply relative bg-white/5 border border-white/10 p-5 rounded-[2.5rem] transition-all duration-500 cursor-pointer overflow-hidden flex flex-col items-center justify-center text-center h-full min-h-[150px]; transform-style: preserve-3d; perspective: 1000px; }
+        .payment-card-3d:hover { @apply border-white/20 bg-white/10; transform: translateY(-10px) rotateX(10deg); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7); }
+        .payment-icon-container { @apply w-16 h-16 rounded-[1.5rem] flex items-center justify-center shadow-2xl transition-all duration-500 mb-4 border border-white/20; transform: translateZ(30px); background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); }
+        .payment-card-3d:hover .payment-icon-container { transform: translateZ(60px) scale(1.1) rotateY(10deg); }
+        .payment-label { @apply text-[9px] font-black text-white tracking-[0.1em] uppercase leading-tight; transform: translateZ(20px); }
+        .social-card { @apply relative bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 transition-all hover:scale-105 hover:bg-white/10 cursor-pointer text-center h-32; }
+        #toast { opacity: 0; transition: all 0.3s ease; bottom: 20px; }
+        @keyframes urgent-blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.95); } }
+        .blink-urgent { animation: urgent-blink 1s infinite; }
+        .status-badge { transition: all 0.3s ease; }
+
+        /* Gaya Butang 3D Merah untuk CTA */
+        .btn-3d-red {
+            @apply bg-red-600 text-white font-bold uppercase tracking-widest px-8 py-4 rounded-xl flex items-center gap-3 w-fit transition-all;
+            border: 1px solid #ef4444;
+            border-bottom: 5px solid #991b1b;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        .btn-3d-red:active {
+            transform: translateY(3px);
+            border-bottom: 2px solid #991b1b;
+            @apply bg-red-700 shadow-inner;
+        }
+        .btn-3d-red:hover {
+            @apply bg-red-500;
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
+        }
+
+        /* KEMASKINI: Gaya Butang Admin Sidebar 3D */
+        .admin-tab-btn { 
+            @apply w-full justify-start px-4 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest border border-transparent relative overflow-hidden group; 
+            margin-bottom: 6px;
+        }
+        .admin-tab-btn.active { 
+            @apply bg-gradient-to-r from-red-900/80 to-red-600/20 text-white border-l-4 border-red-500 shadow-[0_4px_12px_rgba(220,38,38,0.2)]; 
+        }
+        .admin-tab-num { 
+            @apply font-mono text-[9px] opacity-30 w-5 text-right font-black text-blue-500 group-hover:text-red-500 transition-colors; 
+        }
+        .admin-tab-icon {
+            @apply w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-[#1a202c] to-[#000] border border-white/10 shadow-[4px_4px_10px_rgba(0,0,0,0.5),-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 group-hover:scale-110 group-hover:border-red-500/50 group-hover:shadow-[0_0_15px_rgba(239,68,68,0.3)];
+        }
+        .admin-tab-btn.active .admin-tab-icon {
+            @apply bg-gradient-to-br from-red-600 to-red-800 border-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.6)];
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden custom-scrollbar">
+
+    <div id="toast" class="fixed left-1/2 -translate-x-1/2 bg-red-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-[200] font-black text-xs uppercase tracking-widest border border-red-400 pointer-events-none">Notification</div>
+
+    <header class="sticky-header">
+        <div class="bg-black/40 text-gray-400 text-[10px] py-2 px-6 border-b border-white/5 font-black uppercase tracking-widest">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex gap-6 items-center">
+                    <span class="flex items-center gap-2">Network: <span id="connection-status-badge" class="status-badge text-white font-bold">OFFLINE MODE</span></span>
+                </div>
+                <div class="flex gap-6 items-center">
+                    <div id="admin-controls" class="hidden flex items-center gap-4 border-r border-white/10 pr-6">
+                        <span class="text-red-500 text-[9px] flex items-center gap-1.5 animate-pulse"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Admin Active</span>
+                        <button onclick="window.toggleManageModal()" class="bg-red-500 text-white px-4 py-1.5 rounded-lg text-[9px] hover:bg-red-600 transition-all shadow-lg flex items-center gap-2 uppercase"><i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i> Command Hub</button>
+                    </div>
+                    <div id="auth-controls" class="flex gap-6 items-center">
+                        <div id="guest-links" class="flex gap-6">
+                            <button onclick="window.openAuthModal('register')" class="hover:text-white transition-colors">Register Account</button>
+                            <button onclick="window.openAuthModal('login')" class="text-white bg-white/10 px-4 py-1.5 rounded-lg hover:bg-white/20 border border-white/10 transition-all uppercase">Login</button>
+                        </div>
+                        <div id="user-profile" class="hidden items-center gap-4">
+                            <span class="flex items-center gap-2 text-gray-200"><div class="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div><span id="display-username" class="uppercase">User</span></span>
+                            <button onclick="window.handleLogout()" class="text-red-500 hover:text-red-400 uppercase">Exit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container mx-auto px-6 py-6 flex flex-wrap items-center justify-between gap-6 text-xs uppercase font-black">
+            <div class="flex items-center gap-6 cursor-pointer group" onclick="window.switchPage('home')">
+                <div class="relative">
+                    <div class="bg-gradient-to-br from-slate-900 to-black p-4 rounded-2xl border border-white/10 shadow-2xl group-hover:border-red-500/50 transition-all"><i data-lucide="shield-alert" class="text-red-500 w-9 h-9"></i></div>
+                    <div class="absolute -top-7 -left-3 -right-3 flex justify-between h-8 bg-black/90 rounded-full p-1.5 border border-white/20 z-20 shadow-2xl backdrop-blur-md"><div class="w-[47%] h-full rounded-full beacon-red"></div><div class="w-[47%] h-full rounded-full beacon-blue"></div></div>
+                </div>
+                <div><span class="text-4xl font-black text-white tracking-tighter block leading-none">FireSafe<span class="text-red-500">.</span></span><span class="text-[10px] uppercase tracking-[0.5em] text-gray-600 font-bold italic mt-1 block">Industrial Readiness Solutions</span></div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-2 font-black uppercase tracking-widest">
+                <a onclick="window.switchPage('home')" class="nav-link active" id="nav-home">Home</a>
+                <a onclick="window.switchPage('guides')" class="nav-link" id="nav-guides">Safety Guides</a>
+                <a onclick="window.switchPage('about')" class="nav-link" id="nav-about">Mission</a>
+                <a onclick="window.switchPage('team')" class="nav-link" id="nav-team">Org Chart</a>
+                <a onclick="window.switchPage('contact')" class="nav-link" id="nav-contact">Contact</a>
+            </nav>
+            <div class="flex items-center gap-6">
+                <button onclick="window.toggleAIConsultant()" class="bg-blue-600/5 text-blue-400 border border-blue-500/20 px-5 py-2.5 rounded-2xl text-[10px] hover:bg-blue-500 hover:text-white transition-all flex items-center gap-3 font-black uppercase"><i data-lucide="bot" class="w-4.5 h-4.5"></i> AI Analyst</button>
+                <div class="relative cursor-pointer group flex items-center gap-4 bg-white/5 p-2.5 px-5 rounded-2xl border border-white/10 hover:bg-white/10 transition-all" onclick="window.toggleCart()">
+                    <div class="relative"><i data-lucide="shopping-cart" class="w-6 h-6 text-gray-400 group-hover:text-red-500 transition-colors"></i><span id="cart-count" class="absolute -top-3 -right-3 bg-red-500 text-white text-[9px] font-black w-5.5 h-5.5 flex items-center justify-center rounded-full border-2 border-slate-950 shadow-lg">0</span></div><span class="text-xs font-black text-gray-400 group-hover:text-white hidden sm:block tracking-widest uppercase">Cart</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="page-container" class="container mx-auto px-6 py-10 min-h-[75vh]"></main>
+
+    <!-- Modals -->
+    <div id="auth-modal" class="fixed inset-0 z-[120] hidden items-center justify-center p-6 text-xs font-black uppercase"><div class="absolute inset-0 bg-black/95 backdrop-blur-3xl" onclick="window.closeAuthModal()"></div><div class="bg-[#0a0f18] w-full max-w-md rounded-[3.5rem] p-12 border border-white/10 text-center relative z-20 shadow-2xl"><h2 class="text-4xl font-black text-white mb-4 tracking-tighter uppercase" id="auth-title">Identity Registry</h2><p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-10 italic">Verify operational credentials.</p><div id="auth-view-toggle" class="flex bg-black/40 p-1 rounded-2xl mb-8 border border-white/5"><button onclick="window.switchAuthMode('login')" id="btn-mode-login" class="flex-1 py-3 text-[10px] rounded-xl transition-all bg-red-500 text-white shadow-lg uppercase">Login</button><button onclick="window.switchAuthMode('register')" id="btn-mode-register" class="flex-1 py-3 text-[10px] rounded-xl transition-all text-gray-500 hover:text-white uppercase">Register</button></div><form id="auth-form" onsubmit="window.handleAuthSubmit(event)" class="space-y-6"><div id="reg-fields" class="hidden space-y-6"><input type="text" id="reg-name" class="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white outline-none" placeholder="Full Name"></div><input type="email" id="auth-email" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white outline-none focus:border-red-500" placeholder="Identifier Email"><input type="password" id="auth-pass" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white outline-none focus:border-red-500" placeholder="Access Passkey"><button type="submit" id="auth-submit-btn" class="w-full bg-red-500 text-white py-5 rounded-2xl uppercase shadow-2xl">Authorize Access</button></form></div></div>
+    
+    <!-- KEMASKINI: Admin Sidebar dengan Susunan Menegak yang Rapi -->
+    <div id="manage-modal" class="fixed inset-0 z-[150] hidden items-center justify-center p-4 text-xs font-black uppercase"><div class="absolute inset-0 bg-black/98 backdrop-blur-3xl" onclick="window.toggleManageModal()"></div><div class="bg-slate-900 w-full max-w-7xl h-[90vh] rounded-[3rem] shadow-2xl relative z-10 border border-white/10 flex flex-col overflow-hidden"><div class="flex h-full">
+        
+        <div class="w-72 bg-black/40 border-r border-white/5 flex flex-col p-6 hidden lg:flex shrink-0">
+            <div class="flex items-center gap-3 mb-8 px-2">
+                <div class="bg-red-600 p-2.5 rounded-xl text-white shadow-lg shadow-red-600/20"><i data-lucide="cpu" class="w-5 h-5"></i></div>
+                <div>
+                    <span class="text-sm font-black text-white uppercase tracking-tighter block leading-none">Command</span>
+                    <span class="text-[9px] text-gray-500 tracking-[0.2em]">Hub v2.0</span>
+                </div>
+            </div>
+    
+            <nav class="flex flex-col gap-2 flex-1 overflow-y-auto custom-scrollbar pr-2">
+                <button onclick="window.switchAdminTab('overview')" class="admin-tab-btn active" id="tab-overview-btn">
+                    <span class="admin-tab-num">01.</span> <div class="admin-tab-icon"><i data-lucide="activity" class="w-3.5 h-3.5"></i></div> Dashboard
+                </button>
+                <button onclick="window.switchAdminTab('delivery')" class="admin-tab-btn" id="tab-delivery-btn">
+                    <span class="admin-tab-num">02.</span> <div class="admin-tab-icon"><i data-lucide="truck" class="w-3.5 h-3.5"></i></div> Logistics
+                </button>
+                <button onclick="window.switchAdminTab('clients')" class="admin-tab-btn" id="tab-clients-btn">
+                    <span class="admin-tab-num">03.</span> <div class="admin-tab-icon"><i data-lucide="users" class="w-3.5 h-3.5"></i></div> Clientele
+                </button>
+                <button onclick="window.switchAdminTab('inventory')" class="admin-tab-btn" id="tab-inventory-btn">
+                    <span class="admin-tab-num">04.</span> <div class="admin-tab-icon"><i data-lucide="package" class="w-3.5 h-3.5"></i></div> Inventory
+                </button>
+                <button onclick="window.switchAdminTab('categories')" class="admin-tab-btn" id="tab-categories-btn">
+                    <span class="admin-tab-num">05.</span> <div class="admin-tab-icon"><i data-lucide="layers" class="w-3.5 h-3.5"></i></div> Categories
+                </button>
+                <button onclick="window.switchAdminTab('homepage')" class="admin-tab-btn" id="tab-homepage-btn">
+                    <span class="admin-tab-num">06.</span> <div class="admin-tab-icon"><i data-lucide="home" class="w-3.5 h-3.5"></i></div> Homepage
+                </button>
+                <button onclick="window.switchAdminTab('promo')" class="admin-tab-btn" id="tab-promo-btn">
+                    <span class="admin-tab-num">07.</span> <div class="admin-tab-icon"><i data-lucide="percent" class="w-3.5 h-3.5"></i></div> Promo Hub
+                </button>
+                <button onclick="window.switchAdminTab('social')" class="admin-tab-btn" id="tab-social-btn">
+                    <span class="admin-tab-num">08.</span> <div class="admin-tab-icon"><i data-lucide="share-2" class="w-3.5 h-3.5"></i></div> Social Net
+                </button>
+                <button onclick="window.switchAdminTab('content')" class="admin-tab-btn" id="tab-content-btn">
+                    <span class="admin-tab-num">09.</span> <div class="admin-tab-icon"><i data-lucide="file-edit" class="w-3.5 h-3.5"></i></div> Web Content
+                </button>
+                <button onclick="window.switchAdminTab('team')" class="admin-tab-btn" id="tab-team-btn">
+                    <span class="admin-tab-num">10.</span> <div class="admin-tab-icon"><i data-lucide="users" class="w-3.5 h-3.5"></i></div> Org Chart
+                </button>
+                <!-- KEMASKINI: Butang Feedback & Sales kini ada Content yang Betul -->
+                <button onclick="window.switchAdminTab('feedback')" class="admin-tab-btn" id="tab-feedback-btn">
+                    <span class="admin-tab-num">11.</span> <div class="admin-tab-icon"><i data-lucide="message-square" class="w-3.5 h-3.5"></i></div> Feedback
+                </button>
+                <button onclick="window.switchAdminTab('sales')" class="admin-tab-btn" id="tab-sales-btn">
+                    <span class="admin-tab-num">12.</span> <div class="admin-tab-icon"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i></div> Analytics
+                </button>
+            </nav>
+            
+            <div class="mt-4 pt-4 border-t border-white/5 px-2">
+                <button onclick="window.handleLogout()" class="w-full bg-white/5 hover:bg-red-900/30 text-gray-400 hover:text-red-400 py-3 rounded-xl transition-all flex items-center justify-center gap-2 font-bold uppercase text-[9px] tracking-widest">
+                    <i data-lucide="log-out" class="w-3 h-3"></i> Secure Exit
+                </button>
+            </div>
+    
+    </div><div class="flex-1 flex flex-col bg-slate-900/50"><div class="p-10 border-b border-white/5 flex justify-between items-center bg-black/30 text-white text-xl uppercase"><h2>Control Center</h2><button onclick="window.toggleManageModal()"><i data-lucide="x" class="w-8 h-8 text-gray-500 hover:text-white transition-all"></i></button></div><div class="flex-1 overflow-y-auto p-12 custom-scrollbar"><div id="admin-sector-overview" class="admin-sector"><div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center"><div class="bg-white/5 p-12 rounded-[3rem] border border-white/5"><p class="text-xs text-gray-500 mb-4 uppercase">Total Valuation</p><p id="admin-total-val" class="text-5xl text-red-500">RM0.00</p></div><div class="bg-white/5 p-12 rounded-[3rem] border border-white/5"><p class="text-xs text-gray-500 mb-4 uppercase">Operational Units</p><p id="admin-total-assets" class="text-5xl text-white">0</p></div></div></div><div id="admin-sector-delivery" class="admin-sector hidden space-y-8"><div class="bg-white/5 p-10 rounded-[3rem] border border-white/10 text-[10px]"><h3 class="text-white text-lg mb-8 border-b border-white/5 pb-4 uppercase">Customer Orders & Delivery Status</h3><div class="overflow-x-auto"><table class="w-full text-left uppercase tracking-widest"><thead class="text-gray-500 border-b border-white/5"><tr><th class="p-4">Order ID</th><th class="p-4">Customer</th><th class="p-4">Delivery To</th><th class="p-4">Total</th><th class="p-4">Status</th></tr></thead><tbody id="admin-delivery-table"></tbody></table></div></div></div><div id="admin-sector-clients" class="admin-sector hidden space-y-8"><div class="grid grid-cols-1 lg:grid-cols-2 gap-8 text-[10px]"><div class="bg-white/5 p-8 rounded-[3rem] border border-white/10"><h3 class="text-white text-lg mb-6 border-b border-white/5 pb-4 uppercase">Blast Campaign Composer</h3><div class="space-y-4"><div><label class="text-[9px] text-gray-500 uppercase font-bold mb-2 block">Blast Channel</label><select id="blast-channel" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none mb-2" onchange="window.updateBlastPreview()"><option value="whatsapp">WhatsApp Direct</option><option value="email">Email Campaign</option></select></div><div><label class="text-[9px] text-gray-500 uppercase font-bold mb-2 block">Select Promo Product</label><select id="blast-product-select" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none" onchange="window.updateBlastPreview()"></select></div><div><label class="text-[9px] text-gray-500 uppercase font-bold mb-2 block">Campaign Message</label><textarea id="blast-message" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none h-32 resize-none" placeholder="Enter your promotional message here..."></textarea></div><div class="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20 text-blue-300"><p class="font-bold mb-1">Preview:</p><p id="blast-preview" class="italic opacity-80">Select a product to preview message...</p></div><button onclick="window.sendBulkBlast()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold uppercase shadow-lg hover:bg-blue-500 transition-all flex items-center justify-center gap-2"><i data-lucide="send" class="w-4 h-4"></i> Launch Blast</button></div></div><div class="bg-white/5 p-8 rounded-[3rem] border border-white/10 flex flex-col"><h3 class="text-white text-lg mb-6 border-b border-white/5 pb-4 uppercase">Client Database</h3><div class="overflow-y-auto flex-1 custom-scrollbar max-h-[600px]"><table class="w-full text-left uppercase tracking-widest"><thead class="text-gray-500 border-b border-white/5 sticky top-0 bg-[#161b27]"><tr><th class="p-3">Name</th><th class="p-3">Details</th><th class="p-3 text-right">Actions</th></tr></thead><tbody id="admin-clients-table"></tbody></table></div></div></div></div><div id="admin-sector-inventory" class="admin-sector hidden space-y-8"><div class="grid grid-cols-1 lg:grid-cols-12 gap-12"><div class="lg:col-span-4 bg-white/5 p-8 rounded-[3rem] border border-white/10"><h3 id="admin-form-title" class="text-white mb-6 border-b border-white/5 pb-4 uppercase">New Asset</h3><form id="admin-product-form" onsubmit="window.handleAdminProductSubmit(event)" class="space-y-4"><input type="hidden" id="admin-edit-id"><input type="text" id="admin-p-name" required class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none" placeholder="Product Label"><div class="grid grid-cols-2 gap-4"><input type="number" id="admin-p-price" step="0.01" required class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none" placeholder="RM Price"><input type="number" id="admin-p-stock" required class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none" placeholder="Stock Qty"></div><select id="admin-p-cat" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none uppercase text-[10px]"></select>
+                                    <div>
+                                        <label class="text-[9px] text-gray-500 font-bold uppercase tracking-widest block mb-2">Product Rating</label>
+                                        <select id="admin-p-rating" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none text-xs">
+                                            <option value="5">★★★★★ (5 Stars)</option>
+                                            <option value="4">★★★★☆ (4 Stars)</option>
+                                            <option value="3">★★★☆☆ (3 Stars)</option>
+                                            <option value="2">★★☆☆☆ (2 Stars)</option>
+                                            <option value="1">★☆☆☆☆ (1 Star)</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-2"><label class="text-[10px] text-gray-500 font-bold uppercase tracking-widest block">Technical Specifications (One per line)</label><textarea id="admin-p-specs" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-blue-500 transition-colors text-xs font-mono h-24 resize-none" placeholder="e.g.&#10;Battery Life: 5 Years&#10;Weight: 2kg&#10;Certified: ISO 9001"></textarea></div><div class="space-y-3 pt-2"><label class="text-[10px] text-gray-500 font-bold uppercase tracking-widest block">Product Imagery</label><input type="url" id="admin-p-img" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none placeholder-gray-600 text-xs" placeholder="Option A: Paste Image URL"><div class="text-center text-[9px] text-gray-600 font-black uppercase">- OR -</div><div class="relative"><input type="file" id="admin-p-file" accept="image/*" class="hidden" onchange="window.handleFileSelect(this)"><label for="admin-p-file" class="flex items-center justify-center w-full p-4 border border-dashed border-white/10 rounded-2xl cursor-pointer bg-black/20 hover:bg-white/5 transition-all group"><div class="flex items-center gap-3 text-gray-500 group-hover:text-white transition-colors"><i data-lucide="upload-cloud" class="w-5 h-5"></i><span id="file-upload-label" class="text-[10px] font-bold uppercase tracking-widest">Option B: Upload From Device</span></div></label></div></div><button type="submit" id="admin-submit-btn" class="w-full bg-red-500 text-white py-5 rounded-2xl shadow-xl uppercase mt-2">Commit Changes</button><button type="button" onclick="window.resetAdminForm()" id="admin-cancel-btn" class="hidden w-full text-gray-500 mt-2 uppercase">Abort</button></form></div><div class="lg:col-span-8 bg-black/30 rounded-[3rem] border border-white/5 overflow-hidden text-[10px]"><table class="w-full text-left uppercase tracking-widest"><thead class="text-gray-500 border-b border-white/5"><tr><th class="p-6">Product Name</th><th class="p-6">Stock Level</th><th class="p-6 text-right">Actions</th></tr></thead><tbody id="admin-inventory-table"></tbody></table></div></div></div><div id="admin-sector-categories" class="admin-sector hidden space-y-8"><div class="grid grid-cols-1 lg:grid-cols-12 gap-12 text-[10px]"><div class="lg:col-span-4 bg-white/5 p-8 rounded-[3rem] border border-white/10"><h3 id="admin-cat-form-title" class="text-white mb-8 border-b border-white/5 pb-4">Module Hub</h3><form id="admin-category-form" onsubmit="window.handleAdminCategorySubmit(event)" class="space-y-6"><input type="hidden" id="admin-edit-cat-id"><input type="text" id="admin-c-name" required class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none" placeholder="Module Name"><button type="submit" id="admin-cat-submit-btn" class="w-full bg-red-500 text-white py-5 rounded-2xl">Provision Module</button><button type="button" onclick="window.resetAdminCatForm()" id="admin-cat-cancel-btn" class="hidden w-full text-gray-500 mt-2">Abort</button></form></div><div class="lg:col-span-8 bg-black/30 rounded-[3rem] border border-white/5 overflow-hidden text-[10px]"><table class="w-full text-left"><tbody id="admin-category-table"></tbody></table></div></div></div><div id="admin-sector-homepage" class="admin-sector hidden space-y-12"><div class="bg-white/5 p-10 rounded-[3rem] border border-white/10 text-[10px]"><h3 class="text-white text-lg mb-8 border-b border-white/5 pb-4">Hero Node Editor</h3><form onsubmit="window.handleAdminHeroSubmit(event)" class="space-y-6"><input type="text" id="admin-hero-title" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none"><textarea id="admin-hero-sub" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white h-20 outline-none resize-none normal-case font-bold"></textarea><button type="submit" class="bg-red-500 text-white px-8 py-4 rounded-2xl">Update Hero node</button></form></div><div class="bg-white/5 p-10 rounded-[3rem] border border-white/10 text-[10px]"><div class="flex justify-between items-center mb-8 border-b border-white/5 pb-4"><div><h3 class="text-white text-lg flex items-center gap-3"><i data-lucide="layers" class="w-5 h-5 text-red-500"></i> Module Management System</h3><span class="text-gray-500 text-[9px] uppercase tracking-widest mt-1 block">Rename, Reorder & Configure Visibility</span></div><div class="bg-red-500/10 text-red-500 px-3 py-1 rounded-lg border border-red-500/20 text-[8px] font-black animate-pulse">LIVE EDIT MODE</div></div><div id="admin-layout-editor" class="space-y-4"></div><div class="flex gap-4 mt-8"><button onclick="window.resetLayoutConfig()" class="flex-1 bg-white/5 text-gray-400 px-8 py-4 rounded-2xl hover:bg-white/10 transition-all font-bold uppercase text-[9px]">Reset Defaults</button><button onclick="window.saveLayoutConfig()" class="flex-[2] bg-blue-600 text-white px-8 py-4 rounded-2xl hover:bg-blue-500 transition-all font-bold uppercase shadow-lg flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Save Module Configuration</button></div></div><div class="bg-white/5 p-10 rounded-[3rem] border border-white/10"><h3 class="text-white text-lg mb-4">Ad Grid Manager (3 Per Line)</h3><div id="admin-homepage-ads-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 uppercase text-[9px]"></div></div></div><div id="admin-sector-promo" class="admin-sector hidden space-y-8 uppercase text-[10px]"><div class="bg-white/5 p-10 rounded-[4rem] border border-white/10"><h3 class="text-white text-lg mb-8 border-b border-white/5 pb-4">Tactical Promotion Hub</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="admin-promo-grid"></div></div></div>
+                        
+                        <div id="admin-sector-social" class="admin-sector hidden space-y-12"><div class="bg-white/5 p-10 rounded-[3rem] border border-white/10"><div class="flex justify-between items-center mb-8 border-b border-white/5 pb-4"><h3 class="text-white uppercase">Social Media & E-Commerce Link Manager</h3><button onclick="window.addNewSocialLink()" class="bg-green-600 text-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase hover:bg-green-500 transition-all flex items-center gap-2"><i data-lucide="plus" class="w-3 h-3"></i> Add Link</button></div><div class="space-y-6" id="admin-social-container"></div><button onclick="window.saveSocialLinks()" class="w-full bg-blue-600 text-white py-6 rounded-3xl mt-8 font-black uppercase text-xs shadow-xl hover:bg-blue-500 transition-all">Save Social Configuration</button></div></div>
+                        <div id="admin-sector-content" class="admin-sector hidden space-y-12"><div class="bg-white/5 p-10 rounded-[3rem] border border-white/10"><h3 class="text-white uppercase mb-8 border-b border-white/5 pb-4">Page Content Hub</h3><form onsubmit="window.handleAdminContentSubmit(event)" class="space-y-8 uppercase text-[10px]"><div class="bg-black/20 p-6 rounded-2xl border border-white/5 space-y-4"><label class="text-[9px] text-gray-500 font-bold block">Section 1: Guides</label><input type="text" id="admin-title-guides" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none font-bold" placeholder="Section Title"><textarea id="admin-content-guides" class="w-full bg-black/40 border border-white/10 rounded-3xl p-6 text-white h-32 outline-none resize-none font-bold normal-case"></textarea></div><div class="bg-black/20 p-6 rounded-2xl border border-white/5 space-y-4"><label class="text-[9px] text-gray-500 font-bold block">Section 2: Mission</label><input type="text" id="admin-title-mission" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none font-bold" placeholder="Section Title"><textarea id="admin-content-mission" class="w-full bg-black/40 border border-white/10 rounded-3xl p-6 text-white h-32 outline-none resize-none font-bold normal-case"></textarea></div><div class="bg-black/20 p-6 rounded-2xl border border-white/5 space-y-4"><label class="text-[9px] text-gray-500 font-bold block">Section 3: Contact</label><input type="text" id="admin-title-contact" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none font-bold" placeholder="Section Title"><textarea id="admin-content-contact" class="w-full bg-black/40 border border-white/10 rounded-3xl p-6 text-white h-32 outline-none resize-none font-bold normal-case"></textarea></div>
+                        <div class="bg-black/20 p-6 rounded-2xl border border-white/5 space-y-4"><label class="text-[9px] text-gray-500 font-bold block">Section 4: Organization Chart</label><input type="text" id="admin-title-team" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none font-bold" placeholder="Section Title"><textarea id="admin-content-team" class="w-full bg-black/40 border border-white/10 rounded-3xl p-6 text-white h-32 outline-none resize-none font-bold normal-case" placeholder="Intro text for team page..."></textarea></div>
+                        <button type="submit" class="w-full bg-red-500 text-white py-6 rounded-3xl">Sync Global Hub</button></form></div></div>
+                        <div id="admin-sector-team" class="admin-sector hidden space-y-12">
+                            <div class="bg-white/5 p-10 rounded-[3rem] border border-white/10">
+                                <h3 class="text-white uppercase mb-8 border-b border-white/5 pb-4">Organization Chart Manager</h3>
+                                <div class="space-y-6" id="admin-team-container">
+                                    <!-- Team members injected here -->
+                                </div>
+                                <button onclick="window.saveTeamConfig()" class="w-full bg-blue-600 text-white py-6 rounded-3xl mt-8 font-black uppercase text-xs shadow-xl hover:bg-blue-500 transition-all">Save Org Chart</button>
+                            </div>
+                        </div>
+                        
+                        <!-- KEMASKINI: New Sectors for Feedback and Sales -->
+                        <div id="admin-sector-feedback" class="admin-sector hidden space-y-12">
+                            <div class="bg-white/5 p-10 rounded-[3rem] border border-white/10">
+                                <h3 class="text-white uppercase mb-8 border-b border-white/5 pb-4">User Feedback Hub</h3>
+                                <div class="space-y-4" id="admin-feedback-list">
+                                    <!-- Feedback injected here -->
+                                    <p class="text-center text-gray-500 italic py-8">No feedback data available in simulation mode.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="admin-sector-sales" class="admin-sector hidden space-y-12">
+                            <div class="bg-white/5 p-10 rounded-[3rem] border border-white/10">
+                                <h3 class="text-white uppercase mb-8 border-b border-white/5 pb-4">Revenue Analytics</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                                     <div class="bg-black/30 p-6 rounded-2xl border border-white/5 text-center">
+                                         <span class="text-gray-400 text-[9px] uppercase tracking-widest block mb-2">Total Revenue</span>
+                                         <span class="text-3xl text-green-400 font-bold" id="analytics-revenue">RM0.00</span>
+                                     </div>
+                                     <div class="bg-black/30 p-6 rounded-2xl border border-white/5 text-center">
+                                         <span class="text-gray-400 text-[9px] uppercase tracking-widest block mb-2">Orders Processed</span>
+                                         <span class="text-3xl text-blue-400 font-bold" id="analytics-orders">0</span>
+                                     </div>
+                                     <div class="bg-black/30 p-6 rounded-2xl border border-white/5 text-center">
+                                         <span class="text-gray-400 text-[9px] uppercase tracking-widest block mb-2">Avg. Order Value</span>
+                                         <span class="text-3xl text-purple-400 font-bold" id="analytics-avg">RM0.00</span>
+                                     </div>
+                                </div>
+                                <div id="sales-chart-placeholder" class="h-64 bg-black/20 rounded-2xl border border-white/5 flex items-center justify-center">
+                                    <p class="text-gray-500 text-xs italic">Sales Trend Visualization (Simulated)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div></div></div></div></div>
+    <div id="delivery-modal" class="fixed inset-0 z-[165] hidden items-center justify-center p-6 text-xs font-black uppercase"><div class="absolute inset-0 bg-black/95 backdrop-blur-3xl" onclick="window.toggleDeliveryModal()"></div><div class="bg-[#0a0f18] w-full max-w-xl rounded-[3.5rem] p-12 border border-white/10 relative z-20 shadow-2xl"><h2 class="text-3xl font-black text-white mb-2 tracking-tighter uppercase">Deployment Logistics</h2><p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-8 italic">Enter destination coordinates for asset delivery.</p><form id="delivery-form" onsubmit="window.handleDeliverySubmit(event)" class="space-y-4"><input type="text" id="del-name" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-blue-500" placeholder="Recipient Name"><input type="email" id="del-email" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-blue-500" placeholder="Digital Uplink (Email)"><input type="text" id="del-phone" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-blue-500" placeholder="Contact Uplink (Phone)"><div class="relative"><label class="text-[8px] text-gray-500 absolute top-2 left-4">Date of Birth (For Birthday Rewards)</label><input type="date" id="del-dob" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pt-6 text-white outline-none focus:border-blue-500 placeholder-transparent"></div><textarea id="del-address" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-blue-500 h-24 resize-none" placeholder="Target Address"></textarea><div class="grid grid-cols-2 gap-4"><input type="text" id="del-city" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-blue-500" placeholder="Sector/City"><input type="text" id="del-zip" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-blue-500" placeholder="Zone Code"></div><button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl uppercase shadow-xl mt-4 hover:bg-blue-500 transition-all">Proceed to Settlement</button></form></div></div>
+
+    <!-- STANDARD SCRIPT (Global Functions & UI) -->
+    <script>
+        // --- DATA REGISTRY (DEFAULTS) ---
+        var products = []; var categories = []; var layoutConfig = []; var orders = []; var clients = []; var cart = []; var currentUser = null; var currentRole = 'public'; var authMode = 'login'; var currentCategoryFilter = 'All'; var tempDeliveryDetails = null;
+        var feedbackData = [
+            { id: 1, user: "Azman", rating: 5, comment: "Fast delivery and great quality product!", date: "2023-10-15" },
+            { id: 2, user: "Sarah", rating: 4, comment: "Good service, but packaging could be better.", date: "2023-10-12" }
+        ]; // Mock Data
+
+        const CACHE = { PRODUCTS: 'fs_products', CATEGORIES: 'fs_categories', LAYOUT: 'fs_layout', SETTINGS: 'fs_settings', ORDERS: 'fs_orders', CLIENTS: 'fs_clients', TEAM: 'fs_team', FEEDBACK: 'fs_feedback' };
+        const defaultProducts = [{ id: 1, name: "Lithium EV Suppression Blanket", price: 1850.00, image: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=800", cat: "EV Kit", featured: true, rating: 5, discount: 15, stock: 45, specs: ["Thermal Resistance: 2000°C", "Size: 6m x 8m", "Weight: 25kg"] }, { id: 2, name: "Home Safety Tactical Bundle", price: 340.00, image: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=800", cat: "Home Kit", featured: true, rating: 4, discount: 0, stock: 120, specs: ["1kg Dry Powder Extinguisher", "Smoke Detector (x2)", "Fire Blanket 1.2m"] }, { id: 3, name: "Smart WiFi Gas Analyzer", price: 195.00, image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80&w=800", cat: "Gas Detector", featured: true, rating: 5, discount: 10, stock: 85, specs: ["WiFi Connection", "App Alert System", "Detects LPG & Natural Gas"] }, { id: 4, name: "MKAA Industrial PFD Unit", price: 420.00, image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&q=80&w=800", cat: "MKAA Kit", featured: false, rating: 5, discount: 0, stock: 30, specs: ["ISO 12402-4 Certified", "Reflective Tape", "Whistle Included"] }, { id: 5, name: "Static Rappelling Rope (11mm)", price: 950.00, image: "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&q=80&w=800", cat: "Ropes", featured: false, rating: 5, discount: 20, stock: 60, specs: ["Diameter: 11mm", "Length: 100m", "Breaking Strength: 32kN"] }, { id: 6, name: "Professional AED Module", price: 6800.00, image: "https://images.unsplash.com/photo-1516515429572-1b12b5f903e6?auto=format&fit=crop&q=80&w=800", cat: "Life Support", featured: false, rating: 5, discount: 5, stock: 12, specs: ["Fully Automatic", "Voice Prompts", "5-Year Battery Life"] }, { id: 7, name: "Field Athlete Trauma Station", price: 290.00, image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&q=80&w=800", cat: "Athlete Kit", featured: false, rating: 4, discount: 0, stock: 200, specs: ["Ice Packs", "Elastic Bandages", "Antiseptic Spray"] }, { id: 8, name: "Hiking Survival Deep-Field Kit", price: 165.00, image: "https://images.unsplash.com/photo-1537225228614-56cc3556d7ed?auto=format&fit=crop&q=80&w=800", cat: "Hiking Kit", featured: false, rating: 5, discount: 0, stock: 150, specs: ["Compass", "Multi-tool", "Emergency Foil Blanket"] }, { id: 9, name: "Urban Flood Barrier (5m)", price: 820.00, image: "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&q=80&w=800", cat: "Flood Kit", featured: false, rating: 5, discount: 15, stock: 25, specs: ["Length: 5m", "Height: 0.5m", "Rapid Deployment"] }, { id: 10, name: "Tactical Ops Manual", price: 55.00, image: "https://images.unsplash.com/photo-1589998059171-988d887df646?auto=format&fit=crop&q=80&w=800", cat: "E-Book", featured: false, rating: 4, discount: 0, stock: 999, specs: ["PDF Format", "200 Pages", "Illustrated Guides"] }, { id: 11, name: "72-Hour Ration MRE Pack", price: 125.00, image: "https://images.unsplash.com/photo-1584263343923-d4855339c2ce?auto=format&fit=crop&q=80&w=800", cat: "Survival Food", featured: false, rating: 5, discount: 0, stock: 500, specs: ["3000 Calories/Day", "Self-Heating", "5-Year Shelf Life"] }, { id: 12, name: "Expert Fire Safety Training", price: 1500.00, image: "https://images.unsplash.com/photo-1593115057321-44222097767d?auto=format&fit=crop&q=80&w=800", cat: "Tech Support", featured: false, rating: 5, discount: 0, stock: 5, specs: ["On-Site Training", "Certification Included", "Max 20 Participants"] }];
+        const defaultCategories = [{ id: 1, name: "EV Kit", icon: "zap", color: "bg-orange-500/10" }, { id: 2, name: "Home Kit", icon: "home", color: "bg-blue-500/10" }, { id: 3, name: "Gas Detector", icon: "radar", color: "bg-red-500/10" }, { id: 4, name: "MKAA Kit", icon: "anchor", color: "bg-cyan-500/10" }, { id: 5, name: "Ropes", icon: "git-commit", color: "bg-slate-500/10" }, { id: 6, name: "Life Support", icon: "heart-pulse", color: "bg-pink-500/10" }, { id: 7, name: "Athlete Kit", icon: "award", color: "bg-green-500/10" }, { id: 8, name: "Hiking Kit", icon: "mountain", color: "bg-emerald-500/10" }, { id: 9, name: "Flood Kit", icon: "waves", color: "bg-blue-600/10" }, { id: 10, name: "E-Book", icon: "book-open", color: "bg-purple-500/10" }, { id: 11, name: "Survival Food", icon: "utensils-crossed", color: "bg-amber-500/10" }, { id: 12, name: "Tech Support", icon: "shield-check", color: "bg-indigo-500/10" }];
+        const defaultLayoutConfig = [{ id: 'promo', title: "Tactical Deals", visible: true, label: "Promotions" }, { id: 'categories', title: "Asset Modules", visible: true, label: "Categories" }, { id: 'featured', title: "Priority Dispatch", visible: true, label: "Featured" }, { id: 'inventory', title: "Full Inventory Index", visible: true, label: "Inventory" }, { id: 'social', title: "Digital Network & Official Stores", visible: true, label: "Social Media" }, { id: 'payment', title: "Payment Ecosystem", visible: true, label: "Payments" }];
+        
+        var pageContents = { 
+            heroTitle: "Prepared Today. Protected Tomorrow.", 
+            heroSub: "Professional Industry Readiness Solutions with zero-failure technology.", 
+            guidesTitle: "Safety Guides", guides: "Tactical Safety Guides: Ensure fire extinguishing devices are inspected every 6 months. Use suppression blankets for kitchen or EV battery fires. Always identify emergency exits in your node.",
+            missionTitle: "Our Mission", mission: "Our Mission: Providing a zero-failure safety ecosystem through industrial innovation. We believe readiness today determines protection tomorrow.",
+            contactTitle: "Contact HQ", contact: "FireSafe HQ Node\nLot 102, Enstek Industrial Hub,\nNegeri Sembilan, 71760, Malaysia\n\nOperational Link: +60 123 456 789\nSecure Mail: hq@firesafe.global",
+            teamTitle: "Organization Chart", team: "Meet our dedicated leadership team committed to safety excellence."
+        };
+        var socialLinks = [{ id: 'shopee', name: 'Shopee', url: '#', icon: 'shopping-bag', color: 'bg-orange-500' }, { id: 'lazada', name: 'Lazada', url: '#', icon: 'shopping-bag', color: 'bg-blue-600' }, { id: 'temu', name: 'Temu', url: '#', icon: 'shopping-bag', color: 'bg-orange-600' }, { id: 'tiktok', name: 'TikTok Shop', url: '#', icon: 'video', color: 'bg-black' }, { id: 'facebook', name: 'Facebook', url: '#', icon: 'facebook', color: 'bg-blue-800' }];
+        const paymentMethods = [{ id: 'fpx', name: 'FPX Online', icon: 'landmark', color: 'from-blue-600 to-blue-900', desc: 'Secure bank transfer.' }, { id: 'duitnow', name: 'DuitNow', icon: 'send', color: 'from-green-500 to-emerald-800', desc: 'Instant ID transfer.' }, { id: 'qr', name: 'QR Pay', icon: 'qr-code', color: 'from-pink-500 to-rose-800', desc: 'Scan bank apps.' }, { id: 'ewallet', name: 'E-Wallets', icon: 'wallet', color: 'from-indigo-500 to-purple-800', desc: 'TNG, Grab, Boost.' }, { id: 'cards', name: 'Cards', icon: 'credit-card', color: 'from-amber-500 to-orange-800', desc: 'Visa & Mastercard.' }, { id: 'bnpl', name: 'BNPL', icon: 'calendar', color: 'from-teal-500 to-cyan-800', desc: 'Pay in instalments.' }, { id: 'cod', name: 'Cash / COD', icon: 'truck', color: 'from-slate-600 to-slate-900', desc: 'Pay on delivery.' }];
+
+        // KEMASKINI: Team Data with 3D Pixar Style Image
+        var teamMembers = [
+            { id: 1, role: 'Executive Director', name: 'AMIRUDDIN SHUKRI BIN OMAR', img: 'https://i.postimg.cc/kMjjG36w/happy-smiling-cartoon-character-business-office-worker-man-standing-white-3d-style-employee-654181-9.png' },
+            { id: 2, role: 'Operations Manager', name: 'ABDUL HALIM BIN ZULKEFELI', img: 'https://i.postimg.cc/kMjjG36w/happy-smiling-cartoon-character-business-office-worker-man-standing-white-3d-style-employee-654181-9.png' },
+            { id: 3, role: 'HR Manager', name: 'AMIRUL HAKIM BIN MOHAMMAD NOR', img: 'https://i.postimg.cc/kMjjG36w/happy-smiling-cartoon-character-business-office-worker-man-standing-white-3d-style-employee-654181-9.png' },
+            { id: 4, role: 'Sales Manager', name: 'FATHI KAMEEL BIN MOHD AZRI', img: 'https://i.postimg.cc/kMjjG36w/happy-smiling-cartoon-character-business-office-worker-man-standing-white-3d-style-employee-654181-9.png' },
+            { id: 5, role: 'Finance Manager', name: 'MOHAMAD HAFIEZUL BIN ABDUL HALIM', img: 'https://i.postimg.cc/kMjjG36w/happy-smiling-cartoon-character-business-office-worker-man-standing-white-3d-style-employee-654181-9.png' },
+            { id: 6, role: 'IT Manager', name: 'MUHAMMAD RIDHWAN BIN KAMARULZAMAN', img: 'https://i.postimg.cc/kMjjG36w/happy-smiling-cartoon-character-business-office-worker-man-standing-white-3d-style-employee-654181-9.png' }
+        ];
+
+        // --- GLOBAL UI FUNCTIONS ---
+        window.isOnline = function() { return navigator.onLine; };
+        window.showToast = function(msg) { const t = document.getElementById('toast'); if(t){ t.innerText = msg; t.style.opacity = '1'; t.style.bottom = '50px'; setTimeout(() => { t.style.opacity = '0'; t.style.bottom = '20px'; }, 3000); } };
+        
+        // --- HELPER: SAVE TO LOCAL STORAGE ---
+        window.saveData = function() {
+            localStorage.setItem('firesafe_products', JSON.stringify(products));
+            localStorage.setItem('firesafe_categories', JSON.stringify(categories));
+            localStorage.setItem('firesafe_layout_config', JSON.stringify(layoutConfig));
+            localStorage.setItem('firesafe_orders', JSON.stringify(orders));
+            localStorage.setItem('firesafe_page_contents', JSON.stringify(pageContents));
+            localStorage.setItem('firesafe_social_links', JSON.stringify(socialLinks));
+            localStorage.setItem('firesafe_team_members', JSON.stringify(teamMembers));
+            localStorage.setItem('firesafe_feedback', JSON.stringify(feedbackData));
+        }
+
+        // --- UI TOGGLES ---
+        window.toggleCart = function() { const cp = document.getElementById('cart-panel'), co = document.getElementById('cart-overlay'); if(cp && co) { cp.classList.toggle('cart-hidden'); co.classList.toggle('hidden'); setTimeout(() => co.classList.toggle('opacity-100'), 10); } };
+        window.toggleManageModal = function() { const m = document.getElementById('manage-modal'); if(m) { m.classList.toggle('hidden'); m.classList.toggle('flex'); if(m.classList.contains('flex')) window.switchAdminTab('overview'); } };
+        window.toggleDeliveryModal = function() { const m = document.getElementById('delivery-modal'); if(m) { m.classList.toggle('hidden'); m.classList.toggle('flex'); } };
+        window.togglePaymentModal = function() { const m = document.getElementById('payment-modal'); if(m) { m.classList.toggle('hidden'); m.classList.toggle('flex'); window.renderPaymentGateway(); lucide.createIcons(); } };
+        window.toggleAIConsultant = function() { const ap = document.getElementById('ai-consultant-panel'); if(ap) ap.classList.toggle('ai-hidden'); };
+        window.openAuthModal = function(mode = 'login') { const m = document.getElementById('auth-modal'); if (m) { m.classList.remove('hidden'); m.classList.add('flex'); window.switchAuthMode(mode); } };
+        window.closeAuthModal = function() { const m = document.getElementById('auth-modal'); if(m) m.classList.add('hidden'); };
+
+        window.switchAuthMode = function(mode) {
+            authMode = mode;
+            const lb = document.getElementById('btn-mode-login'), rb = document.getElementById('btn-mode-register'), rf = document.getElementById('reg-fields'), sb = document.getElementById('auth-submit-btn');
+            if(lb) lb.className = mode === 'login' ? 'flex-1 py-3 text-[10px] rounded-xl bg-red-500 text-white shadow-lg font-black uppercase' : 'flex-1 py-3 text-[10px] rounded-xl text-gray-500';
+            if(rb) rb.className = mode === 'register' ? 'flex-1 py-3 text-[10px] rounded-xl bg-red-500 text-white shadow-lg font-black uppercase' : 'flex-1 py-3 text-[10px] rounded-xl text-gray-500';
+            if(rf) rf.classList.toggle('hidden', mode !== 'register');
+            if(sb) sb.innerText = mode === 'login' ? "Authorize Access" : "Provision Identity";
+        };
+
+        // --- RENDER & PAGE LOGIC ---
+        window.renderAll = function() { 
+            const promos = products.filter(p => (p.discount || 0) > 0);
+            const pg = document.getElementById('promo-grid');
+            if(pg) pg.innerHTML = promos.length ? promos.map(p => window.generateProductCard(p)).join('') : '<p class="col-span-3 text-center py-20 italic opacity-20">No Active Deployments Found</p>';
+            window.renderAdvertised(); window.renderCategories(); window.renderCategorizedProducts(); 
+        };
+
+        window.switchPage = function(pageId) {
+            const container = document.getElementById('page-container');
+            if (!container) return;
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.id === `nav-${pageId}`));
+            
+            if (pageId === 'home') {
+                let homeHTML = `<section class="relative -mx-6 -mt-10 mb-24 h-[550px] rounded-b-[5rem] overflow-hidden group font-black uppercase tracking-widest"><div class="absolute inset-0 hero-fire-bg transition-transform duration-[3s] group-hover:scale-105"></div><div class="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div><div class="relative z-10 h-full flex flex-col justify-center px-12 max-w-5xl"><h1 class="text-6xl lg:text-8xl tracking-tighter leading-[0.9] mb-6 slogan-gradient italic font-black uppercase">${pageContents.heroTitle}</h1><div class="flex h-6 w-full max-w-2xl bg-black/60 rounded-full p-1 border border-white/10 shadow-2xl mb-10 relative overflow-hidden"><div class="w-1/2 h-full rounded-l-full beacon-red"></div><div class="w-1/2 h-full rounded-r-full beacon-blue"></div></div><p class="text-gray-300 text-sm tracking-widest max-w-xl border-l-2 border-white/20 pl-6 font-black uppercase mb-8">${pageContents.heroSub}</p></div><div class="scan-line"></div></section>`;
+                layoutConfig.forEach(section => { if (section.visible) homeHTML += window.getSectionHTML(section); });
+                container.innerHTML = homeHTML;
+                window.renderAll();
+            } else if (['guides', 'about', 'contact', 'team'].includes(pageId)) {
+                let title = "", content = "";
+                let extraContent = "";
+                
+                if(pageId === 'guides') { title = pageContents.guidesTitle || "Safety Guides"; content = pageContents.guides; }
+                if(pageId === 'about') { title = pageContents.missionTitle || "Our Mission"; content = pageContents.mission; }
+                if(pageId === 'contact') { title = pageContents.contactTitle || "Contact HQ"; content = pageContents.contact; }
+
+                if(pageId === 'team') {
+                    title = "Organization Chart";
+                    const director = teamMembers.find(m => m.role.toLowerCase().includes('director')) || teamMembers[0];
+                    const managers = teamMembers.filter(m => m.id !== director.id);
+
+                    const memberCard = (m, isDirector) => `
+                        <div class="flex flex-col items-center relative z-10 group">
+                            <div class="bg-gradient-to-b from-white/10 to-transparent p-1 rounded-[1.5rem] border ${isDirector ? 'border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'border-white/10'} hover:border-red-500 transition-all duration-300 w-40 md:w-64 bg-[#05080f]">
+                                <div class="rounded-[1.4rem] p-4 text-center flex flex-col items-center relative overflow-hidden h-full">
+                                    <div class="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-2 border-white/10 mb-4 shadow-2xl bg-slate-800">
+                                        <img src="${m.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </div>
+                                    <h4 class="text-red-500 font-black uppercase text-[10px] md:text-xs tracking-widest mb-2 min-h-[30px] flex items-center justify-center leading-tight px-2">${m.role}</h4>
+                                    <p class="text-white font-black text-xs md:text-sm leading-snug uppercase w-full break-words px-1">${m.name}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    extraContent = `
+                        <div class="w-full flex flex-col items-center py-10 px-2 min-w-[320px] overflow-x-hidden space-y-12">
+                            <div class="flex flex-col items-center relative z-20">
+                                ${memberCard(director, true)}
+                            </div>
+                            <div class="flex justify-center gap-4 md:gap-24 w-full relative z-10 flex-wrap">
+                                ${managers.map(m => memberCard(m, false)).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // KEMASKINI: Hanya tunjuk butang edit jika Admin
+                const updateButton = (currentRole === 'admin') ? `
+                    <div class="mt-8 pt-8 border-t border-white/5 flex justify-end">
+                        <button onclick="window.toggleManageModal(); window.switchAdminTab('${pageId === 'team' ? 'team' : 'content'}')" class="text-xs text-gray-500 hover:text-white flex items-center gap-2"><i data-lucide="edit-3" class="w-3 h-3"></i> Edit Page Content</button>
+                    </div>
+                ` : '';
+                
+                const textBlock = content ? `<div class="bg-white/5 border border-white/10 p-12 rounded-[4rem] shadow-2xl relative overflow-hidden mb-12"><p class="text-gray-300 text-lg leading-relaxed normal-case font-bold whitespace-pre-line">${content}</p></div>` : '';
+
+                container.innerHTML = `<div class="py-20 max-w-6xl mx-auto font-black uppercase"><h2 class="text-6xl text-white tracking-tighter mb-12 italic">${title}</h2>${textBlock}${extraContent}${updateButton}</div>`;
+            }
+            lucide.createIcons();
+        };
+
+        window.getSectionHTML = function(section) {
+            if(section.type === 'custom') {
+                 return `<section class="mb-24 font-black uppercase tracking-widest"><div class="section-subtitle mb-8 flex items-center gap-2 text-red-500"><i data-lucide="info" class="w-4 h-4"></i> ${section.title}</div><div class="bg-white/5 border border-white/10 p-12 rounded-[4rem] shadow-2xl relative overflow-hidden"><p class="text-gray-300 text-lg leading-relaxed normal-case font-bold whitespace-pre-line">${section.content}</p></div></section>`;
+            }
+            switch(section.id) {
+                case 'promo': return `<section class="mb-24 px-6 lg:px-12 py-20 bg-gradient-to-br from-red-950/30 to-black/40 rounded-[5rem] border border-red-500/10 font-black uppercase tracking-widest"><div class="flex flex-col md:flex-row items-center justify-between mb-16 gap-6"><div><div class="flex items-center gap-3 text-red-500 mb-3"><i data-lucide="zap" class="w-6 h-6 fill-current"></i> <span class="text-[10px] font-black tracking-[0.4em]">Operational Status: ACTIVE</span></div><h2 class="text-6xl text-white font-black italic tracking-tighter uppercase">${section.title || 'Tactical Deals'}</h2></div><div class="bg-red-500 text-white px-10 py-5 rounded-full shadow-[0_0_30px_rgba(239,68,68,0.4)] animate-pulse">Emergency Flash Sale</div></div><div id="promo-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"></div></section>`;
+                case 'categories': return `<section class="mb-24 font-black uppercase tracking-widest"><div class="section-subtitle mb-8 flex items-center gap-2 text-red-500"><i data-lucide="layout-grid" class="w-4 h-4"></i> ${section.title || 'Asset Modules'}</div><div id="category-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 text-center"></div></section>`;
+                case 'featured': return `<section class="mb-24 font-black uppercase tracking-widest"><div class="section-subtitle mb-8 flex items-center gap-2 text-red-500"><i data-lucide="star" class="w-4 h-4"></i> ${section.title || 'Priority Dispatch'}</div><div id="advertised-grid" class="grid grid-cols-1 md:grid-cols-3 gap-10"></div></section>`;
+                case 'inventory': return `<section id="categorized-inventory" class="space-y-32 mb-24 font-black uppercase tracking-widest"></section>`;
+                case 'social': return `<section class="mb-24 font-black uppercase tracking-widest"><div class="section-subtitle mb-8 flex items-center gap-2 text-red-500"><i data-lucide="globe" class="w-4 h-4"></i> ${section.title || 'Digital Network'}</div><div id="public-social-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"></div></section>`;
+                case 'payment': return `<section class="mb-24 py-24 bg-slate-900/30 rounded-[5rem] border border-white/5 font-black uppercase text-center tracking-widest overflow-hidden relative"><div class="mb-16"><div class="section-subtitle justify-center flex items-center gap-2 text-red-500 mb-4"><i data-lucide="shield-check" class="w-4 h-4"></i> Secure Protocols</div><h2 class="section-title text-4xl text-white tracking-tighter">${section.title || 'Payment Ecosystem'}</h2></div><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-8 px-10 items-stretch">${paymentMethods.map(m => `<div class="payment-card-3d group"><div class="payment-icon-container bg-gradient-to-br ${m.color}"><i data-lucide="${m.icon}" class="w-8 h-8 text-white"></i></div><span class="payment-label">${m.name}</span></div>`).join('')}</div></section>`;
+                default: return '';
+            }
+        };
+
+        // KEMASKINI: Render Social Links (Dynamic)
+        window.renderAdvertised = function() { const c = document.getElementById('advertised-grid'); if(c) { const f = products.filter(p => p.featured); c.innerHTML = f.length ? f.map(p => window.generateProductCard(p)).join('') : '<p class="col-span-3 text-center py-20 italic opacity-20">No Priority Assets Configured</p>'; } };
+        window.renderCategories = function() { const c = document.getElementById('category-grid'); if(c) c.innerHTML = categories.map(cat => `<div class="product-card p-8 flex flex-col items-center justify-center text-center cursor-pointer rounded-[2.5rem] group transition-all font-black uppercase" onclick="window.filterByCategory('${cat.name}')"><div class="w-16 h-16 ${cat.color} rounded-3xl flex items-center justify-center mb-5 group-hover:scale-110 shadow-2xl transition-transform duration-300"><i data-lucide="${cat.icon}" class="w-7 h-7 text-gray-300 group-hover:text-white transition-colors"></i></div><span class="text-[11px] text-gray-500 group-hover:text-red-500 transition-colors duration-300">${cat.name}</span></div>`).join(''); lucide.createIcons(); };
+        window.renderCategorizedProducts = function() { const c = document.getElementById('categorized-inventory'); if(!c) return; let d = products; let t = "Full Inventory Index"; if (currentCategoryFilter !== 'All') { d = products.filter(p => p.cat === currentCategoryFilter); t = `${currentCategoryFilter} Sector`; } c.innerHTML = `<div class="category-block"><div class="category-separator mb-8 flex items-center justify-between gap-4 text-white text-2xl tracking-tighter"><div class="flex items-center gap-4 w-full"><h3 class="text-red-500 whitespace-nowrap">${t}</h3><div class="h-px bg-white/10 flex-1"></div></div>${currentCategoryFilter !== 'All' ? `<button onclick="window.resetCategoryFilter()" class="text-xs bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition-all uppercase font-black tracking-wider whitespace-nowrap">View All</button>` : ''}</div>${d.length > 0 ? `<div class="grid grid-cols-1 md:grid-cols-3 gap-10">${d.map(p => window.generateProductCard(p)).join('')}</div>` : `<div class="text-center py-20 opacity-30 italic uppercase font-black">No assets found in this sector.</div>`}</div>`; lucide.createIcons(); 
+            const socialGrid = document.getElementById('public-social-grid'); if(socialGrid) { socialGrid.innerHTML = socialLinks.map(s => `<a href="${s.url}" target="_blank" class="social-card group"><div class="w-12 h-12 ${s.color} rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform"><i data-lucide="${s.icon}" class="w-6 h-6 text-white"></i></div><span class="text-[10px] text-white tracking-widest font-black">${s.name}</span><span class="text-[8px] text-gray-500 normal-case group-hover:text-red-500 transition-colors">Visit Now</span></a>`).join(''); lucide.createIcons(); }
+        };
+        window.generateProductCard = function(p) { const d = p.discount||0, fp = d>0 ? p.price*(1-d/100) : p.price; const isPromo = d>0; const out = p.stock<=0; 
+            // Generate Stars
+            let starsHtml = '';
+            for(let i=1; i<=5; i++) {
+                const color = i <= (p.rating || 5) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600';
+                starsHtml += `<i data-lucide="star" class="w-3 h-3 ${color}"></i>`;
+            }
+            return `<div class="product-card p-6 rounded-[3rem] group border border-white/5 overflow-hidden cursor-pointer flex flex-col h-full shadow-lg transition-all ${isPromo?'promo-card-highlight':''} ${out?'opacity-60 grayscale':''}" onclick="${out?'':`window.openProductDetail(${p.id})`}"><div class="aspect-video overflow-hidden rounded-[2rem] mb-6 relative bg-slate-900 border border-white/5"><img src="${p.image}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-700">${d>0&&!out?`<div class="absolute top-4 right-4 bg-yellow-400 text-black p-3 rounded-xl shadow-[0_0_20px_rgba(250,204,21,0.5)] animate-pulse flex flex-col items-center justify-center leading-none z-10"><span class="text-[8px] font-black tracking-widest uppercase mb-0.5">SAVE</span><span class="text-lg font-black tracking-tighter blink-urgent">${d}%</span></div>`:''}${out?`<div class="absolute inset-0 bg-black/70 flex items-center justify-center"><span class="text-red-500 font-black text-xl uppercase tracking-widest border-2 border-red-500 p-4 rounded-xl transform -rotate-12">Out of Stock</span></div>`:''}</div><div class="flex justify-between items-center mb-3 uppercase text-[9px] tracking-widest"><span class="text-red-500 font-bold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20">${p.cat}</span><div class="flex gap-0.5 bg-black/40 px-2 py-1 rounded-lg border border-white/5">${starsHtml}</div></div><h4 class="text-xl font-black text-white uppercase truncate mb-6 tracking-tight group-hover:text-red-500 transition-colors">${p.name}</h4><div class="mt-auto flex flex-col gap-4 font-black uppercase"><div class="bg-black/40 p-4 rounded-2xl border border-white/5 relative overflow-hidden group-hover:border-white/10 transition-colors">${d>0?`<div class="absolute top-0 right-0 bg-red-600 text-white text-[8px] px-2 py-1 rounded-bl-lg font-bold tracking-widest blink-urgent">LIMITED DEAL</div>`:''}<div class="flex flex-col">${d>0?`<span class="text-[9px] text-gray-500 line-through decoration-red-500 decoration-2 mb-1">RM${p.price.toFixed(2)}</span>`:''}<div class="flex items-center gap-2"><span class="text-3xl ${d>0?'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]':'text-white'} font-black tracking-tighter">RM${fp.toFixed(2)}</span></div></div></div><div class="flex gap-3 w-full">${out?`<button class="w-full bg-white/5 border border-white/10 text-gray-500 py-3.5 rounded-xl text-[10px] font-bold tracking-wider cursor-not-allowed">Unavailable</button>`:`<button onclick="event.stopPropagation(); window.addToCart(${p.id})" class="flex-1 bg-white/5 border border-white/10 text-gray-300 py-3.5 rounded-xl text-[10px] hover:bg-white/20 hover:text-white transition-all font-bold tracking-wider">Add</button><button onclick="event.stopPropagation(); window.buyNow(${p.id})" class="flex-1 bg-red-600 text-white py-3.5 rounded-xl text-[10px] hover:bg-red-500 transition-all shadow-lg hover:shadow-red-500/40 font-bold tracking-wider">Buy Now</button>`}</div></div></div>`; }
+        window.renderPaymentGateway = function() { const c=document.getElementById('payment-gateway-container'); if(!c)return; c.innerHTML=`<div class="bg-red-500/5 border border-red-500/20 p-8 rounded-3xl flex justify-between items-center font-black"><div><p class="text-gray-500 text-[10px] mb-1 uppercase">Total</p><p class="text-4xl text-white tracking-tighter" id="payment-amount">${document.getElementById('payment-amount')?.innerText||'RM0.00'}</p></div><div class="text-right text-red-500 animate-pulse uppercase">SECURE</div></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6 uppercase tracking-widest">${paymentMethods.map(m=>`<div onclick="window.selectPayment('${m.name}')" class="payment-card-3d group p-8"><div class="payment-icon-container bg-gradient-to-br ${m.color}"><i data-lucide="${m.icon}" class="w-8 h-8 text-white"></i></div><span class="payment-label">${m.name}</span></div>`).join('')}</div>`; lucide.createIcons(); }
+        
+        // --- ADMIN FUNCTIONS ---
+        window.updateAdminHomepage = function() { 
+            document.getElementById('admin-hero-title').value = pageContents.heroTitle; 
+            document.getElementById('admin-hero-sub').value = pageContents.heroSub; 
+            const layoutContainer = document.getElementById('admin-layout-editor');
+            if(layoutContainer) {
+                layoutContainer.innerHTML = layoutConfig.map((section, index) => `
+                    <div class="bg-black/40 border border-white/10 p-4 rounded-2xl flex flex-col md:flex-row items-center gap-4 group transition-all hover:border-white/20">
+                        <div class="flex items-center gap-2 text-gray-500">
+                            <span class="bg-white/5 w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold">${index + 1}</span>
+                            ${section.type === 'custom' ? `<button onclick="window.deleteSection(${index})" class="text-red-500 hover:bg-white/10 p-1.5 rounded"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+                        </div>
+                        <div class="flex-1 w-full space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[8px] uppercase font-bold text-gray-600">${section.label || 'Module'} ${section.id}</label>
+                            </div>
+                            <input type="text" value="${section.title}" oninput="window.updateSectionTitle(${index}, this.value)" class="w-full bg-transparent border-b border-white/10 text-white text-sm font-bold pb-1 outline-none focus:border-blue-500 transition-colors">
+                            ${section.type === 'custom' ? `<textarea oninput="window.updateSectionContent(${index}, this.value)" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-xs text-gray-300 outline-none focus:border-blue-500 h-20">${section.content}</textarea>` : ''}
+                        </div>
+                        <div class="flex items-center gap-2 bg-black/20 p-2 rounded-xl border border-white/5">
+                            <button onclick="window.toggleSectionVisibility(${index})" class="w-9 h-9 rounded-lg flex items-center justify-center transition-all ${section.visible ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}"><i data-lucide="${section.visible ? 'eye' : 'eye-off'}" class="w-4 h-4"></i></button>
+                            <div class="flex flex-col gap-1">
+                                <button onclick="window.moveSection(${index}, -1)" class="w-8 h-4 bg-white/5 hover:bg-white/20 rounded-md flex items-center justify-center"><i data-lucide="chevron-up" class="w-3 h-3"></i></button>
+                                <button onclick="window.moveSection(${index}, 1)" class="w-8 h-4 bg-white/5 hover:bg-white/20 rounded-md flex items-center justify-center"><i data-lucide="chevron-down" class="w-3 h-3"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            }
+            const g = document.getElementById('admin-homepage-ads-grid'); if(g) { g.innerHTML = products.map(p => `<div class="bg-white/5 p-5 rounded-3xl border border-white/10 flex items-center justify-between"><div class="flex items-center gap-3"><img src="${p.image}" class="w-8 h-8 rounded-lg object-cover"><div><p class="text-[10px]">${p.name}</p></div></div><button onclick="window.toggleAdStatus(${p.id})" class="p-2 rounded-xl ${p.featured ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-500'}"><i data-lucide="${p.featured ? 'eye' : 'eye-off'}" class="w-4 h-4"></i></button></div>`).join(''); lucide.createIcons(); } 
+        };
+
+        window.updateSectionContent = function(index, val) { layoutConfig[index].content = val; };
+        
+        window.updateSectionTitle = function(index, newTitle) {
+            layoutConfig[index].title = newTitle;
+        };
+
+        window.toggleSectionVisibility = function(index) {
+            layoutConfig[index].visible = !layoutConfig[index].visible;
+            window.updateAdminHomepage(); 
+        };
+
+        window.moveSection = function(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex >= 0 && newIndex < layoutConfig.length) {
+                [layoutConfig[index], layoutConfig[newIndex]] = [layoutConfig[newIndex], layoutConfig[index]];
+                window.updateAdminHomepage();
+            }
+        };
+
+        window.saveLayoutConfig = function() {
+            window.saveData(); // Save to local storage
+            showToast("Layout Configuration Saved");
+            window.switchPage('home'); // Refresh homepage
+        };
+        
+        window.addNewModule = function() {
+            layoutConfig.push({ id: 'custom-'+Date.now(), type: 'custom', title: 'New Module', content: 'Enter content here...', visible: true, label: 'Custom' });
+            window.updateAdminHomepage();
+            showToast("New Module Added");
+        };
+        
+        window.deleteSection = function(index) {
+            if(confirm("Delete this module?")) {
+                layoutConfig.splice(index, 1);
+                window.updateAdminHomepage();
+                showToast("Module Deleted");
+            }
+        };
+        
+        window.resetLayoutConfig = function() {
+            if(confirm("Reset all module names and order to factory default?")) {
+                layoutConfig = JSON.parse(JSON.stringify(defaultLayoutConfig));
+                window.saveData();
+                window.updateAdminHomepage();
+                showToast("Modules Reset to Default");
+                window.switchPage('home');
+            }
+        };
+
+        // --- AUTH & USER HANDLERS ---
+        window.handleAuthSubmit = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            currentUser = { name: email.split('@')[0], email };
+            currentRole = email.toLowerCase().includes('admin') ? 'admin' : 'public';
+            updateAuthUI();
+            if(document.getElementById('admin-controls')) document.getElementById('admin-controls').classList.toggle('hidden', currentRole !== 'admin');
+            window.closeAuthModal();
+            showToast("Identity Verified (Local)");
+        };
+        window.handleLogout = function() { currentUser = null; if(document.getElementById('admin-controls')) document.getElementById('admin-controls').classList.add('hidden'); updateAuthUI(); window.switchPage('home'); };
+        function updateAuthUI() { 
+            const gl = document.getElementById('guest-links'), up = document.getElementById('user-profile'), dn = document.getElementById('display-username'), sl = document.getElementById('status-label'); 
+            if (currentUser) { if(gl) gl.classList.add('hidden'); if(up) { up.classList.remove('hidden'); up.classList.add('flex'); } if(dn) dn.textContent = currentUser.name; if(sl) sl.innerText = currentRole === 'admin' ? "SYSTEM ADMINISTRATOR" : "VERIFIED MEMBER"; } 
+            else { if(gl) gl.classList.remove('hidden'); if(up) up.classList.add('hidden'); if(sl) sl.innerText = "PUBLIC ACCESS"; } 
+        }
+
+        // --- SHOPPING CART & CHECKOUT ---
+        window.addToCart = function(id) { 
+            const p = products.find(x => x.id === id); 
+            if(!p || p.stock <= 0) { showToast("Asset Out of Stock"); return; }
+            const ex = cart.find(x => x.id === id); 
+            if (ex) { if (ex.q + 1 > p.stock) { showToast("Maximum Stock Reached"); return; } ex.q++; } 
+            else { cart.push({ ...p, q: 1 }); } 
+            window.updateCartUI(); showToast("Asset Stashed in Cart"); 
+        };
+        window.buyNow = function(id) { window.addToCart(id); window.closeProductDetail(); window.toggleCart(); };
+        window.removeFromCart = function(id) { cart = cart.filter(i => i.id !== id); window.updateCartUI(); };
+        window.updateCartUI = function() { 
+            const cc = document.getElementById('cart-count'), cont = document.getElementById('cart-items-container'), foot = document.getElementById('cart-footer'), tot = document.getElementById('cart-total'); if(!cc || !cont || !foot || !tot) return; 
+            cc.innerText = cart.reduce((s, i) => s + i.q, 0); 
+            if (!cart.length) { foot.style.display = 'none'; cont.innerHTML = '<p class="py-20 opacity-20 text-center italic font-black uppercase">Empty</p>'; } 
+            else { foot.style.display = 'block'; let sum = 0; cont.innerHTML = cart.map(i => { const d = i.discount || 0, dp = d > 0 ? i.price * (1 - d/100) : i.price; sum += dp * i.q; return `<div class="bg-white/5 p-6 rounded-3xl flex justify-between items-center border border-white/5 text-[10px] font-black uppercase"><div><p class="text-white truncate max-w-[150px]">${i.name}</p><p class="text-gray-500 mt-1">RM${dp.toFixed(2)} x ${i.q}</p></div><button onclick="window.removeFromCart(${i.id})" class="text-red-500 p-2"><i data-lucide="trash-2" class="w-5 h-5"></i></button></div>`; }).join(''); tot.innerText = `RM${sum.toFixed(2)}`; lucide.createIcons(); } 
+        };
+        window.authorizeSettlement = function() { 
+            if(!currentUser) { window.toggleCart(); window.openAuthModal('register'); showToast("Identity Authorization Required"); } 
+            else { window.toggleCart(); window.toggleDeliveryModal(); } 
+        };
+        window.handleDeliverySubmit = function(e) {
+            e.preventDefault();
+            tempDeliveryDetails = { name: document.getElementById('del-name').value, email: document.getElementById('del-email').value, phone: document.getElementById('del-phone').value, address: document.getElementById('del-address').value, city: document.getElementById('del-city').value, zip: document.getElementById('del-zip').value };
+            window.toggleDeliveryModal();
+            const total = document.getElementById('cart-total').innerText;
+            document.getElementById('payment-amount').innerText = total; 
+            window.togglePaymentModal();
+        };
+        window.selectPayment = function(method) { 
+            showToast(`Settling via ${method}...`); 
+            setTimeout(() => { 
+                cart.forEach(item => { const productIndex = products.findIndex(p => p.id === item.id); if(productIndex > -1) { products[productIndex].stock = Math.max(0, products[productIndex].stock - item.q); } });
+                cart = []; window.updateCartUI(); window.togglePaymentModal(); 
+                window.renderAll(); window.updateAdminInventory();
+                showToast("Mission Authorized. Assets Dispatched."); 
+            }, 2000); 
+        };
+
+        // --- PRODUCT DETAILS ---
+        window.openProductDetail = function(id) {
+            const p = products.find(x => x.id === id), m = document.getElementById('product-detail-modal');
+            if(p && m) {
+                const d = p.discount || 0, fp = d > 0 ? p.price * (1 - d/100) : p.price;
+                document.getElementById('detail-name').innerText = p.name;
+                document.getElementById('detail-cat').innerText = p.cat;
+                document.getElementById('detail-desc').innerText = p.desc || 'Operational data restricted.';
+                document.getElementById('detail-price').innerText = `RM${fp.toFixed(2)}`;
+                document.getElementById('detail-main-img').src = p.image;
+                const stockStatus = document.getElementById('detail-stock-status');
+                if(p.stock <= 0) {
+                    stockStatus.innerHTML = `<span class="text-red-500 font-bold bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/20">OUT OF STOCK</span>`;
+                    document.getElementById('detail-add-btn').disabled = true; document.getElementById('detail-buy-btn').disabled = true;
+                } else {
+                    stockStatus.innerHTML = `<span class="text-green-500 font-bold bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">${p.stock} Units Available</span>`;
+                    document.getElementById('detail-add-btn').disabled = false; document.getElementById('detail-buy-btn').disabled = false;
+                }
+                document.getElementById('detail-spec-list').innerHTML = (p.specs || ["Standard Verified"]).map(s => `<li class="flex items-center gap-3 border-b border-white/5 pb-3 text-[10px] font-bold uppercase"><i data-lucide="shield-check" class="w-4 h-4 text-red-500"></i> ${s}</li>`).join('');
+                m.classList.remove('hidden'); m.classList.add('flex'); lucide.createIcons();
+                document.getElementById('detail-add-btn').onclick = () => { if(p.stock > 0) window.addToCart(p.id); };
+                document.getElementById('detail-buy-btn').onclick = () => { if(p.stock > 0) window.buyNow(p.id); };
+            }
+        };
+        window.closeProductDetail = function() { const m = document.getElementById('product-detail-modal'); if(m) m.classList.add('hidden'); };
+
+        // --- ADMIN TABS & HELPERS ---
+        window.switchAdminTab = function(t) { 
+            const sectors = ['overview', 'delivery', 'clients', 'inventory', 'categories', 'homepage', 'promo', 'social', 'content', 'team', 'feedback', 'sales'];
+            sectors.forEach(s => {
+                const el = document.getElementById(`admin-sector-${s}`); if(el) el.classList.toggle('hidden', t !== s);
+                const btn = document.getElementById(`tab-${s}-btn`); if(btn) btn.classList.toggle('active', t === s);
+            });
+            if(t === 'overview') window.updateAdminOverview(); 
+            if(t === 'inventory') window.updateAdminInventory(); 
+            if(t === 'categories') window.updateAdminCategories(); 
+            if(t === 'homepage') window.updateAdminHomepage(); 
+            if(t === 'promo') window.updateAdminPromo(); 
+            if(t === 'content') window.updateAdminContent();
+            if(t === 'social') window.updateAdminSocial();
+            if(t === 'clients') window.updateAdminClients();
+            if(t === 'delivery') window.updateAdminDelivery();
+            if(t === 'team') window.updateAdminTeam();
+            if(t === 'feedback') window.updateAdminFeedback();
+            if(t === 'sales') window.updateAdminSales();
+        };
+        
+        window.updateAdminFeedback = function() {
+            const list = document.getElementById('admin-feedback-list');
+            if(list && feedbackData.length > 0) {
+                list.innerHTML = feedbackData.map(f => `
+                    <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-white font-bold text-xs">${f.user}</span>
+                            <span class="text-yellow-400 text-xs">${"★".repeat(f.rating)}</span>
+                        </div>
+                        <p class="text-gray-400 text-[10px] italic">"${f.comment}"</p>
+                        <span class="text-gray-600 text-[8px] mt-2 block">${f.date}</span>
+                    </div>
+                `).join('');
+            }
+        };
+
+        window.updateAdminSales = function() {
+            const revenue = orders.reduce((sum, o) => sum + o.total, 0);
+            const count = orders.length;
+            const avg = count > 0 ? revenue / count : 0;
+            
+            document.getElementById('analytics-revenue').innerText = `RM${revenue.toFixed(2)}`;
+            document.getElementById('analytics-orders').innerText = count;
+            document.getElementById('analytics-avg').innerText = `RM${avg.toFixed(2)}`;
+        };
+
+        // --- GLOBAL ADMIN UI FUNCTIONS ---
+        window.updateAdminOverview = function() { 
+            document.getElementById('admin-total-val').innerText = `RM${products.reduce((s, p) => s + p.price, 0).toLocaleString()}`; 
+            document.getElementById('admin-total-assets').innerText = products.length; 
+        };
+
+        window.updateAdminDelivery = function() {
+            const table = document.getElementById('admin-delivery-table');
+            if(!table) return;
+            if(orders.length === 0) { table.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500 italic">No Active Deployments</td></tr>`; return; }
+            table.innerHTML = orders.slice().reverse().map(order => `<tr class="border-b border-white/5 text-gray-400 font-bold text-[9px] hover:bg-white/5 transition-colors"><td class="p-4 text-blue-400 font-mono">#${order.id}</td><td class="p-4 text-white">${order.customer.name}<br><span class="text-[8px] text-gray-600">${order.customer.phone}</span></td><td class="p-4 truncate max-w-[200px]">${order.customer.address}, ${order.customer.city}</td><td class="p-4 text-white">RM${order.total}</td><td class="p-4"><select onchange="window.updateOrderStatus('${order.id}', this.value)" class="bg-black/40 border border-white/10 rounded-lg p-2 text-xs outline-none ${order.status === 'Delivered' ? 'text-green-500' : 'text-yellow-500'}"><option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option><option value="Dispatched" ${order.status === 'Dispatched' ? 'selected' : ''}>Dispatched</option><option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option></select></td></tr>`).join('');
+        };
+
+        window.updateAdminInventory = function() { 
+            const target = document.getElementById('admin-inventory-table'); if(!target) return;
+            const catSelect = document.getElementById('admin-p-cat'); if(catSelect) catSelect.innerHTML = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            target.innerHTML = products.map(p => `<tr class="border-b border-white/5 text-gray-400 font-black uppercase text-[8px] hover:bg-white/5 transition-colors"><td class="p-6"><div class="flex items-center gap-3"><div class="w-2 h-2 rounded-full ${p.stock < 10 ? 'bg-red-600 animate-ping' : 'bg-green-500'}"></div>${p.name}</div></td><td class="p-6"><span class="${p.stock < 20 ? 'text-red-500' : 'text-white'} font-bold">${p.stock} Units</span></td><td class="p-6 text-right space-x-4"><button onclick="window.editAdminProduct(${p.id})" class="text-blue-500 mr-3 hover:text-white transition-colors">Edit</button><button onclick="window.deleteAdminProduct(${p.id})" class="text-red-500 hover:text-white transition-colors">Delete</button></td></tr>`).join(''); 
+        };
+
+        window.updateAdminCategories = function() { 
+            const target = document.getElementById('admin-category-table'); 
+            if(target) target.innerHTML = categories.map(c => `<tr class="border-b border-white/5 text-gray-400 uppercase font-black text-[8px]"><td class="p-6">${c.name}</td><td class="p-6 text-right space-x-4"><button onclick="window.editAdminCategory(${c.id})" class="text-blue-500 mr-3">Edit</button><button onclick="window.deleteAdminCategory(${c.id})" class="text-red-500">Delete</button></td></tr>`).join(''); 
+        };
+
+        // KEMASKINI: Butang Promo Dipulihkan Sepenuhnya (Fungsi Set & Quick Button)
+        window.updateAdminPromo = function() { 
+            const g = document.getElementById('admin-promo-grid'); 
+            if(g) { 
+                g.innerHTML = products.map(p => {
+                    const discount = p.discount || 0;
+                    const liveFinal = p.price * (1 - discount/100);
+                    const isActive = discount > 0;
+                    return `
+                        <div class="bg-white/5 border ${isActive ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 'border-white/10'} p-6 rounded-[2.5rem] flex flex-col gap-5 transition-all"> 
+                            <div class="flex items-center gap-3 font-black">
+                                <img src="${p.image}" class="w-12 h-12 rounded-xl object-cover border border-white/5"> 
+                                <div class="overflow-hidden">
+                                    <p class="text-white truncate font-black text-[10px]">${p.name}</p> 
+                                    <p class="text-gray-500 text-[8px]">Base: RM${p.price.toFixed(2)}</p>
+                                </div>
+                            </div> 
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-[8px] text-red-500 font-black tracking-widest">Discount (%)</label>
+                                    <span class="text-[8px] text-white bg-white/10 px-2 py-0.5 rounded-lg">Final: RM${liveFinal.toFixed(2)}</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="number" id="promo-val-${p.id}" value="${discount}" class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-red-500 text-center font-black" placeholder="0"> 
+                                    <button onclick="window.setPromoVal(${p.id})" class="bg-red-500 text-white px-5 rounded-xl hover:bg-red-600 transition-all shadow-lg"><i data-lucide="check" class="w-4 h-4"></i></button>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="window.quickSetPromo(${p.id}, 0)" class="flex-1 py-1.5 bg-white/5 text-[7px] rounded-lg hover:bg-white/10 transition-all">Reset</button>
+                                    <button onclick="window.quickSetPromo(${p.id}, 25)" class="flex-1 py-1.5 bg-blue-500/10 text-blue-400 text-[7px] rounded-lg hover:bg-blue-500/20 transition-all">25%</button>
+                                    <button onclick="window.quickSetPromo(${p.id}, 50)" class="flex-1 py-1.5 bg-red-500/10 text-red-400 text-[7px] rounded-lg hover:bg-red-500/20 transition-all">50%</button>
+                                </div> 
+                            </div> 
+                        </div>`;
+                }).join(''); 
+                lucide.createIcons(); 
+            } 
+        };
+
+        window.quickSetPromo = function(id, val) {
+            const input = document.getElementById(`promo-val-${id}`);
+            if(input) { input.value = val; window.setPromoVal(id); }
+        };
+
+        // KEMASKINI: Logika setPromoVal kini di sini (Direct)
+        window.setPromoVal = function(id) { 
+            const input = document.getElementById(`promo-val-${id}`);
+            const v = parseInt(input.value) || 0;
+            const p = products.find(x => x.id === id); 
+            if(p) { 
+                p.discount = v;
+                window.saveData(); // Simpan lokal
+                window.renderAll(); 
+                window.updateAdminPromo(); 
+                showToast(`${p.name} promo sync: ${v}%`);
+                
+                // Cuba hantar ke cloud jika online
+                if(window.syncProductToCloud && window.isOnline()) {
+                     window.syncProductToCloud(p.docId, v);
+                }
+            } 
+        };
+
+        window.updateAdminSocial = function() {
+            const container = document.getElementById('admin-social-container');
+            if (container) container.innerHTML = socialLinks.map(s => `
+                <div class="p-6 bg-black/20 rounded-3xl border border-white/5 relative group">
+                    <button onclick="window.deleteSocialLink('${s.id}')" class="absolute top-4 right-4 text-red-500 hover:text-white bg-black/40 p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-10 h-10 rounded-xl ${s.color} flex items-center justify-center shadow-lg transition-colors" id="preview-icon-${s.id}">
+                            <i data-lucide="${s.icon}" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <h4 class="text-white font-black uppercase text-xs tracking-widest">${s.name}</h4>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[9px] text-gray-500 uppercase font-bold mb-2 block">Target URL</label>
+                            <input type="text" value="${s.url}" onchange="window.updateSocialLink('${s.id}', 'url', this.value)" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-blue-500 text-xs font-mono" placeholder="https://...">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[9px] text-gray-500 uppercase font-bold mb-2 block">Icon (Lucide Name)</label>
+                                <input type="text" value="${s.icon}" onchange="window.updateSocialLink('${s.id}', 'icon', this.value); document.getElementById('preview-icon-${s.id}').innerHTML='<i data-lucide=\''+this.value+'\' class=\'w-5 h-5 text-white\'></i>'; lucide.createIcons();" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-blue-500 text-xs" placeholder="e.g. facebook">
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-gray-500 uppercase font-bold mb-2 block">Color (Tailwind)</label>
+                                <input type="text" value="${s.color}" onchange="window.updateSocialLink('${s.id}', 'color', this.value); document.getElementById('preview-icon-${s.id}').className='w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-colors '+this.value;" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-blue-500 text-xs" placeholder="e.g. bg-blue-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        window.updateAdminContent = function() { 
+            document.getElementById('admin-content-guides').value = pageContents.guides; 
+            document.getElementById('admin-content-mission').value = pageContents.mission; 
+            document.getElementById('admin-content-contact').value = pageContents.contact; 
+            // Also update titles
+            document.getElementById('admin-title-guides').value = pageContents.guidesTitle || "Safety Guides";
+            document.getElementById('admin-title-mission').value = pageContents.missionTitle || "Our Mission";
+            document.getElementById('admin-title-contact').value = pageContents.contactTitle || "Contact HQ";
+            document.getElementById('admin-title-team').value = pageContents.teamTitle || "Organization Chart";
+            document.getElementById('admin-content-team').value = pageContents.team || "";
+        }
+
+        window.handleAdminContentSubmit = function(e) { 
+            e.preventDefault(); 
+            // Save Titles
+            pageContents.guidesTitle = document.getElementById('admin-title-guides').value;
+            pageContents.missionTitle = document.getElementById('admin-title-mission').value;
+            pageContents.contactTitle = document.getElementById('admin-title-contact').value;
+            pageContents.teamTitle = document.getElementById('admin-title-team').value;
+            
+            // Save Content
+            pageContents.guides = document.getElementById('admin-content-guides').value; 
+            pageContents.mission = document.getElementById('admin-content-mission').value; 
+            pageContents.contact = document.getElementById('admin-content-contact').value; 
+            pageContents.team = document.getElementById('admin-content-team').value;
+            
+            window.saveData(); // Persist to storage
+            showToast("Global Hub Content & Titles Updated"); 
+            window.switchPage('home'); // Refresh to see changes if any visible
+        };
+
+        window.updateAdminClients = function() {
+            const table = document.getElementById('admin-clients-table');
+            if(clients.length === 0) { table.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-gray-500">No Data</td></tr>`; return; }
+            table.innerHTML = clients.map(c => `<tr><td class="p-2 text-white">${c.name}</td><td class="p-2 text-gray-400">${c.phone}</td></tr>`).join('');
+        }
+
+        window.updateAdminTeam = function() {
+            const container = document.getElementById('admin-team-container');
+            if(container) {
+                container.innerHTML = teamMembers.map(m => `
+                    <div class="p-6 bg-black/20 rounded-3xl border border-white/5 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div class="flex items-center gap-4">
+                            <img src="${m.img}" class="w-12 h-12 rounded-full border border-white/10 object-cover bg-slate-800">
+                            <div>
+                                <input type="text" value="${m.name}" onchange="window.updateTeamMember(${m.id}, 'name', this.value)" class="bg-transparent text-white font-bold text-xs border-b border-transparent focus:border-blue-500 outline-none w-full" placeholder="Name">
+                                <input type="text" value="${m.role}" onchange="window.updateTeamMember(${m.id}, 'role', this.value)" class="bg-transparent text-gray-500 text-[9px] uppercase tracking-widest border-b border-transparent focus:border-red-500 outline-none w-full mt-1" placeholder="Role">
+                            </div>
+                        </div>
+                        <input type="text" value="${m.img}" onchange="window.updateTeamMember(${m.id}, 'img', this.value)" class="bg-black/40 text-gray-400 text-[9px] border border-white/10 rounded-xl p-3 outline-none focus:border-blue-500 w-full font-mono" placeholder="Image URL">
+                        <!-- KEMASKINI: Added Upload Button -->
+                        <div class="relative w-full">
+                            <input type="file" id="team-file-${m.id}" class="hidden" accept="image/*" onchange="window.handleTeamImageUpload(this, ${m.id})">
+                            <label for="team-file-${m.id}" class="cursor-pointer bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white text-[9px] py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all font-bold uppercase tracking-wider w-full">
+                                <i data-lucide="upload" class="w-3 h-3"></i> Upload Local Image
+                            </label>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            }
+        };
+        
+        window.handleTeamImageUpload = async function(input, id) {
+            if (input.files && input.files.length > 0) {
+                try {
+                    const base64 = await window.readFileAsBase64(input.files[0]);
+                    window.updateTeamMember(id, 'img', base64);
+                    window.updateAdminTeam(); // Refresh UI to show new image
+                    showToast("Image Uploaded");
+                } catch (e) {
+                    console.error(e);
+                    showToast("Upload Failed");
+                }
+            }
+        };
+        
+        window.updateTeamMember = function(id, field, value) {
+            const member = teamMembers.find(m => m.id === id);
+            if(member) {
+                member[field] = value;
+            }
+        };
+
+        window.saveTeamConfig = function() {
+            window.saveData();
+            showToast("Organization Chart Saved");
+            if(document.getElementById('nav-team').classList.contains('active')) {
+                window.switchPage('team'); 
+            }
+        };
+
+        window.handleAdminHeroSubmit = function(e) { 
+            e.preventDefault(); 
+            pageContents.heroTitle = document.getElementById('admin-hero-title').value; 
+            pageContents.heroSub = document.getElementById('admin-hero-sub').value; 
+            window.saveData(); 
+            showToast("Hero node updated"); 
+            window.switchPage('home'); 
+        };
+
+        // --- BIND ADMIN BUTTONS ---
+        window.handleAdminProductSubmit = async function(e) { e.preventDefault(); const id = document.getElementById('admin-edit-id').value; const urlInput = document.getElementById('admin-p-img'); const fileInput = document.getElementById('admin-p-file'); let finalImage = ""; if (fileInput.files && fileInput.files.length > 0) { try { finalImage = await window.readFileAsBase64(fileInput.files[0]); } catch (err) { showToast("Image Upload Error"); return; } } else if (urlInput.value.trim() !== "") { finalImage = urlInput.value.trim(); } else if (id) { const existing = products.find(p => p.id == id); finalImage = existing ? existing.image : ""; } if (!finalImage) finalImage = "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=800"; const specsRaw = document.getElementById('admin-p-specs').value; const specsArray = specsRaw.split('\n').map(s => s.trim()).filter(s => s.length > 0); const data = { name: document.getElementById('admin-p-name').value, price: parseFloat(document.getElementById('admin-p-price').value), stock: parseInt(document.getElementById('admin-p-stock').value), cat: document.getElementById('admin-p-cat').value, rating: parseInt(document.getElementById('admin-p-rating').value) || 5, image: finalImage, specs: specsArray.length > 0 ? specsArray : ["Standard Verified"], featured: false, discount: 0 }; if (id) { const idx = products.findIndex(p => p.id == id); products[idx] = { ...products[idx], ...data, featured: products[idx].featured, discount: products[idx].discount }; } else { products.unshift({ id: Date.now(), ...data }); } window.saveData(); window.resetAdminForm(); window.updateAdminInventory(); window.renderAll(); showToast("Asset & Visuals Updated"); };
+        window.editAdminProduct = function(id) { const p = products.find(x => x.id == id); document.getElementById('admin-edit-id').value = p.id; document.getElementById('admin-p-name').value = p.name; document.getElementById('admin-p-price').value = p.price; document.getElementById('admin-p-stock').value = p.stock; document.getElementById('admin-p-cat').value = p.cat; document.getElementById('admin-p-rating').value = p.rating || 5; document.getElementById('admin-p-specs').value = (p.specs || []).join('\n'); document.getElementById('admin-p-img').value = ""; document.getElementById('admin-p-file').value = ""; document.getElementById('file-upload-label').textContent = "Change Image (Optional)"; document.getElementById('file-upload-label').classList.remove('text-green-400'); if (!p.image.startsWith('data:')) { document.getElementById('admin-p-img').value = p.image; } document.getElementById('admin-form-title').innerText = "Edit Asset Protocol"; document.getElementById('admin-cancel-btn').classList.remove('hidden'); };
+        window.deleteAdminProduct = function(id) { products = products.filter(p => p.id !== id); window.saveData(); window.updateAdminInventory(); window.renderAll(); showToast("Asset Deleted"); };
+        window.resetAdminForm = function() { document.getElementById('admin-product-form').reset(); document.getElementById('admin-edit-id').value = ""; document.getElementById('file-upload-label').textContent = "Option B: Upload From Device"; document.getElementById('file-upload-label').classList.remove('text-green-400'); document.getElementById('admin-form-title').innerText = "Provision Asset"; document.getElementById('admin-cancel-btn').classList.add('hidden'); };
+        window.handleAdminCategorySubmit = function(e) { e.preventDefault(); const id = document.getElementById('admin-edit-cat-id').value, name = document.getElementById('admin-c-name').value; if (id) { const idx = categories.findIndex(c => c.id == id), old = categories[idx].name; categories[idx].name = name; products.forEach(p => { if(p.cat === old) p.cat = name; }); } else { categories.push({ id: Date.now(), name, icon: 'layers', color: 'bg-orange-500/10' }); } window.saveData(); window.resetAdminCatForm(); window.updateAdminCategories(); window.updateAdminInventory(); window.renderAll(); showToast("Module Protocol Updated"); };
+        window.editAdminCategory = function(id) { const c = categories.find(x => x.id == id); document.getElementById('admin-edit-cat-id').value = c.id; document.getElementById('admin-c-name').value = c.name; document.getElementById('admin-cat-form-title').innerText = "Edit Module Node"; document.getElementById('admin-cat-cancel-btn').classList.remove('hidden'); };
+        window.deleteAdminCategory = function(id) { const c = categories.find(x => x.id === id); if(c) { categories = categories.filter(x => x.id !== id); products.forEach(p => { if(p.cat === c.name) p.cat = "Uncategorized"; }); window.saveData(); window.updateAdminCategories(); window.updateAdminInventory(); window.renderAll(); showToast("Module Deleted"); } };
+        window.resetAdminCatForm = function() { document.getElementById('admin-category-form').reset(); document.getElementById('admin-edit-cat-id').value = ""; document.getElementById('admin-cat-form-title').innerText = "Provision Module"; document.getElementById('admin-cat-cancel-btn').classList.add('hidden'); };
+        
+        window.toggleAdStatus = function(id) { const p = products.find(x => x.id === id); if(p) { p.featured = !p.featured; window.saveData(); window.updateAdminHomepage(); window.renderAdvertised(); showToast("Ad Layout Updated"); } };
+        window.updateOrderStatus = function(id, status) { const order = orders.find(o => o.id === id); if(order) { order.status = status; window.saveData(); showToast(`Order #${id} Updated: ${status}`); window.updateAdminDelivery(); } };
+        
+        window.handleFileSelect = function(input) {
+            const label = document.getElementById('file-upload-label');
+            if (input.files && input.files.length > 0) { label.textContent = input.files[0].name; label.classList.add('text-green-400'); } else { label.textContent = "Option B: Upload From Device"; label.classList.remove('text-green-400'); }
+        };
+
+        window.readFileAsBase64 = function(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        };
+
+        // --- INIT ---
+        window.onload = function() {
+            const p = localStorage.getItem(CACHE.PRODUCTS); if(p && p!=='[]') products = JSON.parse(p); else products = [...defaultProducts];
+            const c = localStorage.getItem(CACHE.CATEGORIES); if(c) categories = JSON.parse(c); else categories = [...defaultCategories];
+            const l = localStorage.getItem(CACHE.LAYOUT); if(l) layoutConfig = JSON.parse(l); else layoutConfig = [...defaultLayoutConfig];
+            const o = localStorage.getItem(CACHE.ORDERS); if(o) orders = JSON.parse(o);
+            const cl = localStorage.getItem(CACHE.CLIENTS); if(cl) clients = JSON.parse(cl);
+            const s = localStorage.getItem('firesafe_page_contents'); if(s) { const saved = JSON.parse(s); pageContents = { ...pageContents, ...saved }; }
+            const sl = localStorage.getItem('firesafe_social_links'); if(sl) socialLinks = JSON.parse(sl);
+            const tm = localStorage.getItem('firesafe_team_members'); if(tm) { teamMembers = JSON.parse(tm); }
+            
+            const container = document.getElementById('page-container');
+            if (!container.innerHTML.trim()) { window.switchPage('home'); } else { window.renderAll(); }
+            
+            window.updateAdminInventory(); window.updateAdminPromo(); window.updateAdminClients(); window.updateAdminHomepage(); window.updateAdminDelivery(); window.updateAdminContent(); window.updateAdminTeam(); window.updateAdminSocial();
+            
+            if(window.initFirebase) window.initFirebase();
+        }
+    </script>
+    <!-- Firebase Script (Simplified) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        let firebaseConfig; let appId;
+        if (typeof __firebase_config !== 'undefined') { firebaseConfig = JSON.parse(__firebase_config); appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'; } 
+        else { firebaseConfig = { apiKey: "YOUR_API_KEY", authDomain: "YOUR_PROJECT_ID.firebaseapp.com", projectId: "YOUR_PROJECT_ID", storageBucket: "YOUR_PROJECT_ID.firebasestorage.app", messagingSenderId: "YOUR_SENDER_ID", appId: "YOUR_APP_ID" }; appId = 'firesafe-live-v1'; }
+
+        // EXPORT SYNC FUNCTION FOR MAIN SCRIPT
+        window.syncProductToCloud = async (docId, discountVal) => {
+             if(!docId || !navigator.onLine) return;
+             try {
+                const app = initializeApp(firebaseConfig); const db = getFirestore(app);
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', docId), { discount: discountVal });
+             } catch(e) { console.error("Cloud sync silent fail", e); }
+        };
+
+        window.initFirebase = async () => {
+             const el = document.getElementById('connection-status-badge');
+             if (!navigator.onLine || firebaseConfig.apiKey === "YOUR_API_KEY") { 
+                el.innerHTML = '<span class="text-yellow-500 font-bold">OFFLINE / DEMO</span>'; return; 
+             }
+             try {
+                const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token); else await signInAnonymously(auth);
+                
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        el.innerHTML = '<span class="text-green-500 font-bold">ONLINE SYNC</span>';
+                        onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), (snapshot) => {
+                            if (!snapshot.empty) {
+                                window.products = snapshot.docs.map(doc => ({ ...doc.data(), docId: doc.id })).sort((a,b) => a.id - b.id);
+                                localStorage.setItem(CACHE.PRODUCTS, JSON.stringify(window.products));
+                                if(window.renderAll) window.renderAll(); 
+                                if(window.updateAdminPromo) window.updateAdminPromo();
+                                if(window.updateAdminInventory) window.updateAdminInventory();
+                                if(window.updateAdminClients) window.updateAdminClients();
+                            }
+                        });
+                        onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'clients'), (snapshot) => {
+                            if (!snapshot.empty) {
+                                window.clients = snapshot.docs.map(doc => ({ ...doc.data(), docId: doc.id }));
+                                localStorage.setItem(CACHE.CLIENTS, JSON.stringify(window.clients));
+                                if(window.updateAdminClients) window.updateAdminClients();
+                            }
+                        });
+                    }
+                });
+             } catch(e) { console.error(e); }
+        };
+        // Re-call init if module loads late
+        if (document.readyState === 'complete') window.initFirebase();
+    </script>
+</body>
+</html>
