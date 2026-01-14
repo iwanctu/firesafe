@@ -1,0 +1,12 @@
+{
+  "buildCommand": "echo 'Static site - no build needed'",
+  "outputDirectory": "public",
+  "public": true,
+  "redirects": [
+    {
+      "source": "/((?!index\\.html).*)",
+      "destination": "/index.html",
+      "statusCode": 307
+    }
+  ]
+}
